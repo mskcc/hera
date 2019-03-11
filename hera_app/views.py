@@ -76,12 +76,9 @@ def login():
                 username,
                 "trying to login with email address instead of MSK user id",
             )
-            return jsonify(
-                {
-                    'type': 'error',
-                    'msg': 'Error: Please use your MSK user ID instead of email address as Username',
-                }
-            )
+            flash('Error: Please use your MSK user ID instead of email address as Username')
+            return render_template('login.html', form=form)
+            
         try:
             conn = get_ldap_connection()
             conn.simple_bind_s('%s@mskcc.org' % username, password)
