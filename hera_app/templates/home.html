@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block container %}
+    {% if 'logged_in' in session %}
+        <h1>Welcome to Hera, {{session['username']}}.</h1>
+        
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapseGroups" role="button" aria-expanded="false" aria-controls="collapseExample">
+            Click here to see your groups.
+        </a>
+        <div class="collapse" id="collapseGroups">
+            <div class="card card-body " style="text-align: left !important;">
+                {{session['groups']}}
+            </div>
+        </div>
+    {% else %}
+        <h1>Welcome to Hera.</h1>
+        <a class="btn btn-primary" href="{{ url_for('login') }}">login with your MSK credentials</a>
+    {% endif %}
+{% endblock %}
