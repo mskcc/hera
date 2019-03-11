@@ -1,4 +1,5 @@
 import ldap
+import re
 from flask import (
     request,
     render_template,
@@ -48,6 +49,15 @@ def login_required(f):
     return wrap
 
 
+# @login_manager.user_loader
+# def load_user(userid):
+#     try:
+#         #: Flask Peewee used here to return the user object
+#         return User.get(User.id==userid)
+#     except User.DoesNotExist:
+#         return None
+
+
 @app.route('/')
 @login_required
 def index():
@@ -76,21 +86,30 @@ def login():
                 username,
                 "trying to login with email address instead of MSK user id",
             )
-            flash('Error: Please use your MSK user ID instead of email address as Username')
+            flash(
+                'Error: Please use your MSK user ID instead of email address as Username'
+            )
             return render_template('login.html', form=form)
-            
+
         try:
             conn = get_ldap_connection()
             conn.simple_bind_s('%s@mskcc.org' % username, password)
             # conn.simple_bind_s('cn=%s,dc=example,dc=org' % username, password)
+            attrs = ['memberOf']
+            # attrs = ['sAMAccountName', 'displayName', 'memberOf', 'title']
             result = conn.search_s(
                 'DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG',
                 ldap.SCOPE_SUBTREE,
                 'sAMAccountName=wagnerl',
-                ['memberOf'],
+                attrs,
             )
+            print(result)
             conn.unbind_s()
-            ret_results = []
+
+            p = re.compile('CN=(.*?)\,')
+            m = re.sub('CN=Users', '', str(result))
+            m = p.findall(m)
+            print(m)
 
         except ldap.INVALID_CREDENTIALS:
             log_error("user", username, "trying to login with invalid credentials")
@@ -101,7 +120,7 @@ def login():
         flash('You were logged in.')
         session['logged_in'] = True
         session['username'] = username
-        session['groups'] = result
+        session['groups'] = m
         return redirect(url_for('home'))
     if form.errors:
         return jsonify(
@@ -121,3 +140,9 @@ def logout():
     session.pop('logged_in', None)
     flash('You were logged out.')
     return redirect(url_for('home'))
+
+
+@app.route('/tables')
+@login_required
+def tables():
+    return render_template('tables.html')
