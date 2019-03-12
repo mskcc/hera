@@ -1,7 +1,7 @@
 import unittest
 from flask_testing import TestCase
 from hera_app import app, db
-from hera_app.auth import User
+from hera_app.views.auth import User
 
 
 class BaseTestCase(TestCase):

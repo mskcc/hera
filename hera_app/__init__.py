@@ -5,8 +5,8 @@ from flask_wtf.csrf import CSRFProtect
 
 
 app = Flask(__name__)
-# app.config.from_pyfile("secret_config.py")
-app.config.from_pyfile("config.py")
+app.config.from_pyfile("secret_config.py")
+# app.config.from_pyfile("config.py")
 db = SQLAlchemy(app)
 
 
@@ -17,11 +17,11 @@ login_manager.login_message = ''
 
 
 # User model/table creation
-from hera_app.auth import User
+from hera_app.views.auth import User
 
 db.create_all()
 db.session.commit()
 
 csrf = CSRFProtect(app)
 
-import hera_app.views
+import hera_app.views.views

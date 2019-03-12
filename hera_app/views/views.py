@@ -3,7 +3,7 @@ import re
 from flask import request, render_template, flash, redirect, url_for, g, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from hera_app import app, login_manager, db
-from hera_app.auth import User, LoginForm
+from hera_app.views.auth import User, LoginForm
 
 
 def log_error(*args):
