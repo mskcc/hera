@@ -11,23 +11,22 @@ class BaseTestCase(TestCase):
         app.config['DEBUG'] = True
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
-        app.config[
-            'SQLALCHEMY_DATABASE_URI'
-        ] = 'mysql+pymysql:/$TESTUSERDB@$HOST/$TESTDB'
-        app.config['SECRET_KEY'] = 'abc'
-        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-        app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
+        # app.config[
+        #     'SQLALCHEMY_DATABASE_URI'
+        # ] = 'mysql+pymysql:/$TESTUSERDB@$HOST/$TESTDB'
+        # app.config['SECRET_KEY'] = 'abc'
+        # app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
 
         return app
 
-    def setUp(self):
-        db.create_all()
-        # db.session.add(User("admin", "ad@min.com", "admin"))
-        db.session.commit()
+    # def setUp(self):
+    #     db.create_all()
+    #     # db.session.add(User("admin", "ad@min.com", "admin"))
+    #     db.session.commit()
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
+    # def tearDown(self):
+    #     db.session.remove()
+    #     db.drop_all()
 
 
 class FlaskTestCase(BaseTestCase):
