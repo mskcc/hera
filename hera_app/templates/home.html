@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block container %}
-    {% if 'logged_in' in session %}
+    {% if current_user.is_authenticated %}
         <h1>Welcome to Hera, {{session['username']}}.</h1>
         
         <a class="btn btn-primary" data-toggle="collapse" href="#collapseGroups" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -8,7 +8,7 @@
         </a>
         <div class="collapse" id="collapseGroups">
             <div class="card card-body " style="text-align: left !important;">
-                {{session['groups']}}
+                {{current_user.groups}}
             </div>
         </div>
     {% else %}

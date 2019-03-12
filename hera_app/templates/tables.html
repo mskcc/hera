@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block container %}
+    {% if 'logged_in' in session %}
+        <h1>Nothing to see here, {{session['username']}}.</h1>
+        
+    {% else %}
+        <h1>Welcome to Hera.</h1>
+        <a class="btn btn-primary" href="{{ url_for('login') }}">login with your MSK credentials</a>
+    {% endif %}
+{% endblock %}

@@ -27,3 +27,5 @@ pip-log.txt
 venv
 *.pyc
 build
+
+secret_config.py
