@@ -44,6 +44,7 @@ def get_current_user():
 
 
 @app.route('/')
+@app.route('/index')
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
@@ -68,7 +69,7 @@ def login():
             flash(
                 'Error: Please use your MSK user ID instead of email address as Username'
             )
-            return render_template('login.html', form=form)
+            return render_template('login.html', form=form), 401
 
         try:
             result = User.try_login(username, password)
@@ -77,7 +78,7 @@ def login():
         except ldap.INVALID_CREDENTIALS:
             log_error("user", username, "trying to login with invalid credentials")
             flash('Error: Invalid username or password. Please try again.')
-            return render_template('login.html', form=form)
+            return render_template('login.html', form=form), 401
 
         user = load_username(username)
         # no authorization yet. for now, everybody who authenticates will be added to table
