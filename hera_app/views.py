@@ -44,13 +44,8 @@ def get_current_user():
 
 
 @app.route('/')
-@login_required
-def index():
-    print(current_user)
-    return render_template('index.html')
-
-
 @app.route('/home', methods=['GET', 'POST'])
+@login_required
 def home():
     return render_template('home.html')
 
