@@ -4,6 +4,10 @@ from hera_app import app, db
 from hera_app.views.auth import User
 
 
+from hera_app.views.tables import tables
+
+
+
 class BaseTestCase(TestCase):
     """A base test case."""
 
@@ -15,8 +19,7 @@ class BaseTestCase(TestCase):
         #     'SQLALCHEMY_DATABASE_URI'
         # ] = 'mysql+pymysql:/$TESTUSERDB@$HOST/$TESTDB'
         # app.config['SECRET_KEY'] = 'abc'
-        # app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
-
+        app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
         return app
 
     # def setUp(self):

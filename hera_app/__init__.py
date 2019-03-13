@@ -22,6 +22,11 @@ from hera_app.views.auth import User
 db.create_all()
 db.session.commit()
 
+
+
+from hera_app.views.tables import tables
+app.register_blueprint(tables)
+
 csrf = CSRFProtect(app)
 
 import hera_app.views.views
