@@ -1,9 +1,25 @@
 import ldap
 import re
-from flask import request, render_template, flash, redirect, url_for, g, jsonify
+from flask import (
+    request,
+    render_template,
+    flash,
+    redirect,
+    url_for,
+    g,
+    jsonify,
+    session,
+    Blueprint,
+)
 from flask_login import current_user, login_user, logout_user, login_required
+from flask_table import Table, Col
+from datetime import timedelta
+
 from hera_app import app, login_manager, db
-from hera_app.views.auth import User, LoginForm
+from hera_app.auth import User, LoginForm
+
+
+main = Blueprint('main', __name__)
 
 
 def log_error(*args):
@@ -38,24 +54,30 @@ def load_username(username):
     return User.query.filter_by(username=username).first()
 
 
-@app.before_request
-def get_current_user():
-    g.user = current_user
+# @main.before_request
+# def get_current_user():
+#     g.user = current_user
 
 
-@app.route('/')
-@app.route('/index')
-@app.route('/home', methods=['GET', 'POST'])
+@main.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(hours=2)
+
+
+@main.route('/')
+@main.route('/index')
+@main.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
     return render_template('home.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@main.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         flash('Error: You are already logged in')
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     form = LoginForm()
     if request.method == 'POST' and form.validate():
         username = form.username.data
@@ -92,7 +114,7 @@ def login():
         login_user(user)
         log_info("user", username, "logged in successfully")
         flash('You were logged in.')
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     if form.errors:
         flash(
             'Error: '
@@ -107,15 +129,9 @@ def format_result(result):
     return p.findall(groups)
 
 
-@app.route('/logout')
+@main.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('You were logged out.')
-    return redirect(url_for('home'))
-
-
-@app.route('/tables')
-@login_required
-def tables():
-    return render_template('tables.html')
+    return redirect(url_for('main.home'))

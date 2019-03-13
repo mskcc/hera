@@ -1,10 +1,93 @@
 {% extends 'base.html' %}
+{% block additional_js_top %}
+{% endblock %}
+{% block additional_js_bottom %}
+    
+{% endblock %}
 {% block container %}
-    {% if 'logged_in' in session %}
-        <h1>Nothing to see here, {{session['username']}}.</h1>
-        
-    {% else %}
-        <h1>Welcome to Hera.</h1>
-        <a class="btn btn-primary" href="{{ url_for('login') }}">login with your MSK credentials</a>
-    {% endif %}
+ <div id="samples"></div>
+</br>
+</br>
+</br>
+<div id='sample_id_timeline'> Sample 5c8944c18798cecd7e4fb8dc </div>
+<div id="visualization"></div>
+</br>
+</br>
+</br>
+<div id="sample_ids"></div>
+</br>
+</br>
+</br>
+
+<style type="text/css">
+    .jsgrid-cell {     
+    word-wrap: break-word;
+}
+</style>
+<script>
+$(function() {
+    $("#samples").jsGrid({
+    // height: "100%",
+    width: "100%",
+    
+    sorting: true,
+    paging: true,
+    // inserting: true,
+    // editing: true,
+    
+    // data: clients,
+    data: {{samples|tojson|safe}},
+    
+    fields: [
+    { align:'left', css:'sample_id', name: "sample_id", type: "text", width: 150, title: "sample_id" },
+    { align:'left', name: "state", type: "text", width: 50 },
+    { align:'left', name: "created", type: "text", width: 200 },
+    { align:'left', name: "tags", type: "text", title: "tags" }
+    ]
+    });
+
+    $("#sample_ids").jsGrid({
+    // height: "100%",
+    width: "100%",
+    
+    sorting: true,
+    paging: true,
+    // inserting: true,
+    // editing: true,
+    
+    // data: clients,
+    data: {{sample_ids|tojson|safe}},
+    
+    fields: [
+    { align:'left', css:'sample_id', name: "id", type: "text", title: "sample_id" },
+    { align:'left', name: "AltId", type: "text" },
+    { align:'left', name: "correctedCmoId", type: "text" },
+    { align:'left', name: "igoId", type: "text" },
+    { align:'left', name: "userSampleId", type: "text" },
+    ]
+    });
+    
+    });
+    
+    var container = document.getElementById('visualization');
+    // Create a DataSet (allows two way data-binding)
+    var timeline_sample= new vis.DataSet([
+    {id: 1, content: 'received', start: '2019-04-20'},
+    {id: 2, content: 'sequenced', start: '2019-04-14'},
+    {id: 3, content: 'analyzed', start: '2019-04-18'},
+    {id: 4, content: 'resequenced', start: '2019-04-16'},
+    {id: 5, content: 'delivered', start: '2019-04-25'}
+    
+    ]);
+    // Configuration for the Timeline
+    var options = {};
+    // Create a Timeline
+    var timeline = new vis.Timeline(container, timeline_sample, options);
+    
+    $(function() {
+    $(".sample_id").click(function(){
+    $("#sample_id_timeline").text('Sample ' + $(this).text());
+    })
+    });
+    </script>
 {% endblock %}

@@ -1,11 +1,13 @@
 import unittest
 from flask_testing import TestCase
 from hera_app import app, db
-from hera_app.views.auth import User
+from hera_app.auth import User
 
 
 from hera_app.views.tables import tables
+from hera_app.views.main import main
 
+app.register_blueprint(main)
 
 
 class BaseTestCase(TestCase):
@@ -20,6 +22,7 @@ class BaseTestCase(TestCase):
         # ] = 'mysql+pymysql:/$TESTUSERDB@$HOST/$TESTDB'
         # app.config['SECRET_KEY'] = 'abc'
         app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
+
         return app
 
     # def setUp(self):

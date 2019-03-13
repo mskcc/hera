@@ -12,21 +12,25 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'main.login'
 login_manager.login_message = ''
 
 
 # User model/table creation
-from hera_app.views.auth import User
+from hera_app.auth import User
 
+# SQLAlchemy only creates if not exist
 db.create_all()
 db.session.commit()
 
-
-
-from hera_app.views.tables import tables
+from .views.tables import tables
 app.register_blueprint(tables)
+
+from .views.main import main
+app.register_blueprint(main)
+
+
+
 
 csrf = CSRFProtect(app)
 
-import hera_app.views.views

@@ -58,6 +58,11 @@ class User(db.Model, UserMixin):
     def get_groups(self):
         return str(self.groups)
 
+    @property
+    def serialize(self):
+        """Return object data in easily serializable format"""
+        return {'id': self.id, 'udername': self.username, 'groups': self.groups}
+
 
 class LoginForm(FlaskForm):
     username = StringField('Username', [InputRequired('Username is required')])
