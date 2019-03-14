@@ -83,56 +83,7 @@ sample_ids = [
         "correctedCmoId": "JY5RsEyd7D9btvwoucEHynSEzzn9eYDbGOUsCRi7wZzQXocUvFP8pucn1n3ISExCeTiM1Fk44aBlWRKyTQ951Dk1M7tqc22cPVghyQIHxa1JWpZ16k27ykdnHwY7OhSb4L0MlKL5Qxve",
         "igoId": "1xQtVEWSinCy9wTqoXl5ruParchyGb0iv0h70ZtnSlC4tymtT1KqGXoUIV52azYYT2zetV",
         "userSampleId": "j1yZ3DVxOLX7NkQ73jFpJHHezb50nUNuFN0To993cWXlIuKFzWQpFpERrsxXu5KD1sXtMql1ZSVFyfCc1G0qBfUdLM3jhvMo5BfgIWX3Qk0CFXqdVL61ZoyX7jbJUDb7393dnGXIWaIu",
-    },
-    {
-        "id": 54976200918,
-        "AltId": "JFPZXsq",
-        "correctedCmoId": "B558ZZjsvPUTaDS7k9G9KBJuSDrf2RVj7QEgFpizVXa9gVt0EAFRryemYUHLwnpBpm3IKJBC7SvITHkVVa0ZSnL8jqzfk91sTO9DWOI0QBtcv1cTa0mam10IqnX9sSCfp3xZyn0ZRDiT",
-        "igoId": "77dtAm5c5xxF8kTpxZjm0YEcXAHkratKKUMXyGQecO6o8gAHPkdHC0IZ4s7GIcf7TdpLrt",
-        "userSampleId": "9Z01wpItiR0OQNS5b5fr1JXCuHeawtivNtYZ1cZaJCqAw7ldUOeTgEfK3Jva8Tb7PU1qWAUPuec93Y8XT3mns2Ecd95QVGg5hVhBto2Va3mjAvTuF3a9bJIxqhcn24Vp1fZWSYsYavbG",
-    },
-    {
-        "id": 6773727393,
-        "AltId": "vaSkf3B",
-        "correctedCmoId": "PQzwLPGbKorOPGPom9y1rehQGJW9TPBokHdT9fJmTfeQQ3dpt1sv7pL0T1hPl0u5wVuzav2M4yoeRnfXkGj5jvOMTVJKtN3dBjXcthBjTpdLwcG7boyHSD6M2ytGXEXDB4ieWnXhjCQB",
-        "igoId": "WCmemsmpw5crVkkh0Q1TI2KCAg9kFakh0oSJ8SrEBwKPV52dAKbYyc2UAADGb3I9hIgILy",
-        "userSampleId": "0rkyfnsUXLxJl3jvXD2lFjmv3AosO6CslnBqi1H0odV0rQyNDvpDKYFz8SPtEvU2Oz91l15BCRPjbL7cFlqoTJkg28RNrjCUmCQT56rcPA9IzlhtsIC7V0YC2YKcdFPjv9c5GV1ZhdLn",
-    },
-    {
-        "id": 40731765768,
-        "AltId": "zODFvrB",
-        "correctedCmoId": "qQUfKtkQN0mziJHGL4NcUA5vV2kUy9uUNQIOlwt1eFjLNp14BSsLIMD9Q07HhRB2f44gRcFkAXwOfhsBdXXp5MuWIRZtazOqKFGwBbujuTFYGDYuhqxPNPodWtsrkIeZkxQwc4t2MkOY",
-        "igoId": "Aw7Tg3SNA4wFJYCZLnJ4Rn0LWH4tTSeRwSAu9yG6YFt58VOjMKIxkIRAflkDseswR9GYxb",
-        "userSampleId": "AxOYsTZODsODIcORTdTFPZEvguzKQGvQI6VAWlj6jWQuIr7FS4fBG7RD2gcx0aOY9S4IsJXuNbOGyBHeUQQ5YkqqPyWnoAV7iDk6u9n8c8Oe6TnhfO694qBfMGgvASiCmc3iuopDKTCr",
-    },
-    {
-        "id": 95722297280,
-        "AltId": "ypk4IWE",
-        "correctedCmoId": "9wcUSK46kfXKfNi3BJvd2bnabNXO3AWH83xcKthbXNVttU2enTtgdax7WG0IrtMGyQjMSi9d6MP0muHhAqaJqQq6rzCbnb8A4ChIXDIMdnPE2CkvkjuaNG8hUvQEGxX0NFo0hr64s4kN",
-        "igoId": "fRJz8jsPyZKURHrHvJFy8PM2EZOZDXFIxWxk03N36MKRmDT0eOyiHCL9tTk30baOs0BVaS",
-        "userSampleId": "2aLuYzxaEZOQK94IrUaeJdH4QQ2eOWOYsiCoxePnFpec61WyRSLlmu0COXn5U6n1Yw57tIVTAdZoctlmYjq95Ol9SggOGqj04Mj4C5O19N5WR8hZfajcdvqDeAl8pWWaoqfJCpW1DL9r",
-    },
-    {
-        "id": 76255030106,
-        "AltId": "DudnQkv",
-        "correctedCmoId": "nR9uvYBVFv1WZgQupQbdRVC3KNiGuXukO5c51EZfcgSaDDT1j3mAUnLjFFqgWAU17hhDydJfdrm4RBNumRIU23rSiDiOtm0cdzXb6I35Z4p5VemDu8pjvGal23yt2zPVj59ANSt1HV50",
-        "igoId": "lUbub1WYAbZb1MMAtRn4AUXQuANDJGqPanflwS6s8KyJIbPxtvUypyhklmelnwbLqJxDnO",
-        "userSampleId": "IdlXIzadOjTfAfT6Y0TH0vjqTTHVoCylrOZ3AeXKtBnGKgrbmgVLnV1FuQZYGBB3CF5szZBvzAHrT8DpUjaayBJ2Gb6tp6Ie0ZF78I1UJ6DXiQyVuJ1qlIuguFfVQj0L5w2EUvAnL61k",
-    },
-    {
-        "id": 59309721346,
-        "AltId": "Ri9jdaE",
-        "correctedCmoId": "H4kIZxVfe8JJEnKTMGjq48e71UHW2nqdlRhtuMli5NGExCFygzPcjJV0g7Hwdkv44e9ss7V14IQFCXYTfSrZ8Kqs6wHdEROKAyQnXCzoVmaR6lmlJrkDkrn6BddXK9MWzXoVf1RRToZK",
-        "igoId": "tb8DysWeK26VU4MeHh9VlaVpPZtKQk5xToZxQLYL5iNXlx0CCCUtLAVdAwrKhDdJZefKVh",
-        "userSampleId": "RxiaexGc6oS2e0Kz2xYGnLiZtoI5Q222mQKDIzjH0Il90VEkh6wfFKnOnQoj552qQOpnZNTYmGcNBTQPOeK1MIr4WMm8Tcr1uoKLCldsjwzuFzu8ugjOwrdDok0xf4e6dMOj6NBuyE8a",
-    },
-    {
-        "id": 94699072733,
-        "AltId": "Z7XQjrI",
-        "correctedCmoId": "GzTcqKg0Q42jQeYu6raw51G9QAIIYsBnmuyidN2H8yIIXkbsobV5SAdVtoEaWqaxGxxZcwuSFJ5jXP1j7NJLmIIfye9yhISSzkAf3wtLMBnHHwdOgQpVVlkPmz7xbAVo51EA8Cga1tHu",
-        "igoId": "jMUTe4ovgLWFNbJeIGUGmr5OkvRuWpHvCxjxWw5bF68inb7LZDuKfzZX12dDfTYAQbLV0d",
-        "userSampleId": "T2u02genii1kKkXp31dvzxBXFv54SNFpiZ45GTG8PAZTaAZn00Sv0hM9QnIbqIVJ9pdbzcCUir3KBJwJaup8zkD1GITGUrpNAi6c86U0M36Z0DFd17tEea0XZMicEHgbvWgAuvvXwdbE",
-    },
+    }
 ]
 
 items = [
