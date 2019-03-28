@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block container %}
     {% if current_user.is_authenticated %}
-        <h1>Welcome to Hera, {{session['username']}}.</h1>
+        <h1>Welcome to the Oracle.</h1>
         
         <a class="btn btn-primary" data-toggle="collapse" href="#collapseGroups" role="button" aria-expanded="false" aria-controls="collapseExample">
             Click here to see your groups.
@@ -12,7 +12,7 @@
             </div>
         </div>
     {% else %}
-        <h1>Welcome to Hera.</h1>
+        <h1>Welcome to the Oracle.</h1>
         <a class="btn btn-primary" href="{{ url_for('main.login') }}">login with your MSK credentials</a>
     {% endif %}
 {% endblock %}

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hera</title>
+    <title>Oracle</title>
     {% block additional_js_top %}{% endblock %}
     <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
@@ -21,7 +21,7 @@
 
 <body>
     <div class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top" role="navigation">
-        <a class="navbar-brand" href="{{ url_for('main.home') }}">Hera</a>
+        <a class="navbar-brand" href="{{ url_for('main.home') }}">Oracle</a>
         <div class="e" id="navbarText">
             <ul class="navbar-nav mr-auto">
                 {% if not current_user.is_authenticated %}
