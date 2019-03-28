@@ -13,8 +13,8 @@
 </br>
 </br>
 </br>
-<div id='sample_id_timeline'> Sample 5c8944c18798cecd7e4fb8dc </div>
-<div id="visualization"></div>
+<!-- <div id='sample_id_timeline'> Sample 5c8944c18798cecd7e4fb8dc </div> -->
+<!-- <div id="visualization"></div> -->
 
 </br>
 </br>
@@ -32,36 +32,17 @@
 <script>
 $(function() {
 
-    $("#samples").jsGrid({
-    height: "100%",
-    width: "100%",
-    
-    sorting: true,
-    paging: true,
-    // inserting: true,
-    // editing: true,
-    
-    // data: clients,
-    data: {{samples|tojson|safe}},
-    
-    fields: [
-    { align:'left', css:'sample_id', name: "sample_id", type: "text", width: 150, title: "sample_id" },
-    { align:'left', name: "state", type: "text", width: 50 },
-    { align:'left', name: "created", type: "text", width: 200 },
-    { align:'left', name: "tags", type: "text", title: "tags" }
-    ]
-    });
-    
 
     $("#sample_ids").jsGrid({
     // height: "100%",
     width: "100%",
-    
+
     sorting: true,
     paging: true,
+    filtering: true,
     // inserting: true,
     // editing: true,
-    
+    pageSize: 200,
     // data: clients,
     data: {{sample_id_data|tojson|safe}},
     fields: {{sample_id_columns|tojson|safe}}
