@@ -5,10 +5,11 @@ from wtforms.validators import InputRequired
 from flask_login import UserMixin
 from hera_app import app, db
 
+ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
 
 def get_ldap_connection():
     conn = ldap.initialize(app.config['AUTH_LDAP_URL'])
-    conn.set_option(ldap.OPT_REFERRALS, 0)
+    conn.set_option(ldap.OPT_REFERRALS, 0)    
     return conn
 
 
