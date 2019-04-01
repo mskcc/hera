@@ -9,7 +9,7 @@
 {% endblock %}
 {% block container %}
  <!-- <div id="samples"></div> -->
-<div id="sample_ids"></div> 
+<table class="stripe" style="width:100%" id="sample_ids"></table> 
 </br>
 </br>
 </br>
@@ -35,19 +35,14 @@
 <script>
 $(function() {
 
-   
+   $(document).ready( function () {
+    $('#sample_ids').DataTable({ 
+            "data": {{data|safe}},
+            "columns": {{columnHeaders|safe}},
+            'pageLength': 25,
+        });
+    });
+});
   
-    var hotContainer = document.getElementById('sample_ids');
-    
-    new Handsontable(hotContainer, {
-      data: {{data|default('', true)|safe}},
-      colHeaders: {{columnHeaders|safe}},
-      columnSorting: true,
-      licenseKey: 'non-commercial-and-evaluation',
-      readOnly: true
-
-    });
-    });
-   
-    </script>
+</script>
 {% endblock %}

@@ -50,8 +50,13 @@ def index():
 
 
 def generateColumnHeaders(dbColumns):
-    columnHeaders = [col for col, in dbColumns]
-    return columnHeaders
+    sample_id_columns_dict = []
+    sample_id_columns = []
+    for row in dbColumns:
+        sample_id_columns_dict = {"data": row[0], "title": row[0]}
+        sample_id_columns.append(sample_id_columns_dict.copy())
+    
+    return sample_id_columns
 
 
 def generateData(dbData, columnHeaders):
@@ -59,7 +64,7 @@ def generateData(dbData, columnHeaders):
     sample_id_data = []
     for row in dbData:
         for i, col in enumerate(columnHeaders):
-            sample_id_data_dict[col] = '' if row[i] is None else row[i]
+            sample_id_data_dict[col['data']] = '' if row[i] is None else row[i]
         sample_id_data.append(sample_id_data_dict.copy())
     return sample_id_data
 
