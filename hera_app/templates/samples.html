@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block additional_js_top %}
+    <link  type= "text/css" href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+
+{% endblock %}
+{% block additional_js_bottom %}
+    
+{% endblock %}
+{% block container %}
+ <!-- <div id="samples"></div> -->
+<table class="stripe" style="font-size:.8em;width:100%" id="sample_ids"></table> 
+</br>
+</br>
+</br>
+<!-- <div id='sample_id_timeline'> Sample 5c8944c18798cecd7e4fb8dc </div> -->
+<!-- <div id="visualization"></div> -->
+
+</br>
+</br>
+</br>
+
+</br>
+</br>
+</br>
+
+<style type="text/css">
+    .jsgrid-cell {     
+    word-wrap: break-word;
+}
+    .handsontable .htDimmed {
+        color: black !important;
+    }
+</style>
+<script>
+$(function() {
+
+   $(document).ready( function () {
+    $('#sample_ids').DataTable({ 
+            "data": {{data|safe}},
+            "columns": {{columnHeaders|safe}},
+            'pageLength': 20,
+            "lengthMenu": [[20, 50, -1], [20, 50, "All"]]
+        });
+    });
+});
+  
+</script>
+{% endblock %}

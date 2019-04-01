@@ -17,28 +17,12 @@ tables = Blueprint('tables', __name__)
 
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
-from .items import items, sample_states, sample_ids
-
-# Declare your table
-class ItemTable(Table):
-    id = Col('id')
-    username = Col('username')
-    groups = Col('groups')
-    classes = ['table', 'table-striped']
-    allow_sort = True
-
-    def sort_url(self, col_key, reverse=False):
-        if reverse:
-            direction = 'desc'
-        else:
-            direction = 'asc'
-        return url_for('tables.index', sort=col_key, direction=direction)
 
 
-@tables.route('/tables')
+
+@tables.route('/samples')
 @login_required
-def index():
-
+def samples():
     #  move to sth more persistent once columns are more finalized
     sample_id_db_columns = engine.execute(
         'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA="samplestatus"  AND TABLE_NAME="sample";'
@@ -46,27 +30,39 @@ def index():
     sample_id_db_data = engine.execute('SELECT * FROM sample').fetchall()
     columnHeaders = generateColumnHeaders(sample_id_db_columns)
     data = generateData(sample_id_db_data, columnHeaders)
-    return render_template('tables.html', columnHeaders=columnHeaders, data=data)
+    return render_template('samples.html', columnHeaders=columnHeaders, data=data)
+
+@tables.route('/status')
+@login_required
+def status():
+    #  move to sth more persistent once columns are more finalized
+    sample_id_db_columns = engine.execute(
+        'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA="samplestatus"  AND TABLE_NAME="status";'
+    )
+    sample_id_db_data = engine.execute('SELECT * FROM status').fetchall()
+    columnHeaders = generateColumnHeaders(sample_id_db_columns)
+    data = generateData(sample_id_db_data, columnHeaders)
+    return render_template('status.html', columnHeaders=columnHeaders, data=data)
 
 
 def generateColumnHeaders(dbColumns):
-    sample_id_columns_dict = []
-    sample_id_columns = []
+    columns_dict = []
+    columns = []
     for row in dbColumns:
-        sample_id_columns_dict = {"data": row[0], "title": row[0]}
-        sample_id_columns.append(sample_id_columns_dict.copy())
-    
-    return sample_id_columns
+        columns_dict = {"data": row[0], "title": row[0]}
+        columns.append(columns_dict.copy())
+
+    return columns
 
 
 def generateData(dbData, columnHeaders):
-    sample_id_data_dict = {}
-    sample_id_data = []
+    data_dict = {}
+    data = []
     for row in dbData:
         for i, col in enumerate(columnHeaders):
-            sample_id_data_dict[col['data']] = '' if row[i] is None else row[i]
-        sample_id_data.append(sample_id_data_dict.copy())
-    return sample_id_data
+            data_dict[col['data']] = '' if row[i] is None else str(row[i])
+        data.append(data_dict.copy())
+    return data
 
 
 @tables.route('/sample_timeline')

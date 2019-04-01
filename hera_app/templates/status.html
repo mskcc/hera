@@ -9,7 +9,7 @@
 {% endblock %}
 {% block container %}
  <!-- <div id="samples"></div> -->
-<table class="stripe" style="width:100%" id="sample_ids"></table> 
+<table class="stripe" style="font-size:.8em;width:100%" id="status"></table> 
 </br>
 </br>
 </br>
@@ -36,10 +36,11 @@
 $(function() {
 
    $(document).ready( function () {
-    $('#sample_ids').DataTable({ 
+    $('#status').DataTable({ 
             "data": {{data|safe}},
             "columns": {{columnHeaders|safe}},
-            'pageLength': 25,
+            'pageLength': 20,
+            "lengthMenu": [[20, 50, -1], [20, 50, "All"]]
         });
     });
 });

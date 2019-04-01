@@ -1,6 +1,10 @@
 body {
     padding-top: 50px;
 }
+
+table {
+    font-size: 0.8em;
+}
 .top-pad {
     padding: 40px 15px;
     /*text-align: center;*/
