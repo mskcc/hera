@@ -28,47 +28,26 @@
     .jsgrid-cell {     
     word-wrap: break-word;
 }
+    .handsontable .htDimmed {
+        color: black !important;
+    }
 </style>
 <script>
 $(function() {
 
+   
+  
+    var hotContainer = document.getElementById('sample_ids');
+    
+    new Handsontable(hotContainer, {
+      data: {{data|default('', true)|safe}},
+      colHeaders: {{columnHeaders|safe}},
+      columnSorting: true,
+      licenseKey: 'non-commercial-and-evaluation',
+      readOnly: true
 
-    $("#sample_ids").jsGrid({
-    // height: "100%",
-    width: "100%",
-
-    sorting: true,
-    paging: true,
-    filtering: true,
-    // inserting: true,
-    // editing: true,
-    pageSize: 200,
-    // data: clients,
-    data: {{sample_id_data|tojson|safe}},
-    fields: {{sample_id_columns|tojson|safe}}
     });
-    
     });
-    
-    var container = document.getElementById('visualization');
-    // Create a DataSet (allows two way data-binding)
-    var timeline_sample= new vis.DataSet([
-    {id: 1, content: 'received', start: '2019-04-20'},
-    {id: 2, content: 'sequenced', start: '2019-04-14'},
-    {id: 3, content: 'analyzed', start: '2019-04-18'},
-    {id: 4, content: 'resequenced', start: '2019-04-16'},
-    {id: 5, content: 'delivered', start: '2019-04-25'}
-    
-    ]);
-    // Configuration for the Timeline
-    var options = {};
-    // Create a Timeline
-    var timeline = new vis.Timeline(container, timeline_sample, options);
-    
-    $(function() {
-    $(".sample_id").click(function(){
-    $("#sample_id_timeline").text('Sample ' + $(this).text());
-    })
-    });
+   
     </script>
 {% endblock %}
