@@ -36,13 +36,16 @@ def samples():
 @login_required
 def status():
     #  move to sth more persistent once columns are more finalized
-    sample_id_db_columns = engine.execute(
+    status_db_columns = engine.execute(
         'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA="samplestatus"  AND TABLE_NAME="status";'
     )
-    sample_id_db_data = engine.execute('SELECT * FROM status').fetchall()
-    columnHeaders = generateColumnHeaders(sample_id_db_columns)
-    data = generateData(sample_id_db_data, columnHeaders)
-    return render_template('status.html', columnHeaders=columnHeaders, data=data)
+    # TODO grab from state table eventually
+    distict_states = engine.execute('SELECT DISTINCT state FROM status').fetchall()
+    status_db_data = engine.execute('SELECT * FROM status').fetchall()
+    states = [r for r, in distict_states]
+    columnHeaders = generateColumnHeaders(status_db_columns)
+    data = generateData(status_db_data, columnHeaders)
+    return render_template('status.html', columnHeaders=columnHeaders, data=data, states=states)
 
 
 def generateColumnHeaders(dbColumns):
