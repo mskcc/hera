@@ -4,7 +4,7 @@ import json
 from sqlalchemy import create_engine
 import sqlalchemy as db
 from hera_app import app
-
+from datetime import datetime
 
 from flask_login import login_required
 from hera_app.auth import User
@@ -40,19 +40,26 @@ def status(sample_id=None):
     )
     # TODO grab from state table eventually
     distict_states = engine.execute("SELECT DISTINCT state FROM status").fetchall()
+    states = [r for r, in distict_states]
+    columnHeaders = generateColumnHeaders(status_db_columns)
 
     if sample_id is None:
         status_db_data = engine.execute("SELECT * FROM status ").fetchall()
+        data = generateStatusData(status_db_data, columnHeaders)
+        return render_template(
+            "status.html", columnHeaders=columnHeaders, data=data, states=states
+        )
     else:
         status_db_data = engine.execute(
             "SELECT * FROM status WHERE fk_sample_id=" + sample_id
         ).fetchall()
-    states = [r for r, in distict_states]
-    columnHeaders = generateColumnHeaders(status_db_columns)
-    data = generateStatusData(status_db_data, columnHeaders)
-    return render_template(
-        "status.html", columnHeaders=columnHeaders, data=data, states=states
-    )
+        data = generateStatusData(status_db_data, columnHeaders)
+        vis_data = generateVisData(status_db_data)
+        return render_template(
+            "single_status.html", columnHeaders=columnHeaders, data=data, vis_data=vis_data,sample_id=sample_id
+        )
+    
+    
 
 
 def generateColumnHeaders(dbColumns):
@@ -65,6 +72,7 @@ def generateColumnHeaders(dbColumns):
     return columns
 
 
+
 def generateStatusData(dbData, columnHeaders):
     data_dict = {}
     data = []
@@ -72,6 +80,16 @@ def generateStatusData(dbData, columnHeaders):
         for i, col in enumerate(columnHeaders):
             data_dict[col["data"]] = "" if row[i] is None else str(row[i])
         data.append(data_dict.copy())
+    return data
+
+
+def generateVisData(dbData):
+    data_dict = {}
+    data = []
+    for i, row in enumerate(dbData):
+        data_dict = {"id": row['id'], "content": row['state'], "start":row['date'].strftime("%Y-%m-%d")}
+        data.append(data_dict.copy())
+    print(data)
     return data
 
 

@@ -39,8 +39,8 @@ $(function() {
     $('#sample_ids').DataTable({ 
             "data": {{data|safe}},
             "columns": {{columnHeaders|safe}},
-            'pageLength': 20,
-            "lengthMenu": [[20, 50, -1], [20, 50, "All"]]
+            'pageLength': 15,
+            "lengthMenu": [[15, 25, 50, -1], [15, 25, 50, "All"]]
         });
     });
 });

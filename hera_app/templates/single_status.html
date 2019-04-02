@@ -8,9 +8,10 @@
     
 {% endblock %}
 {% block container %}
- <div id="distinct-states">Available States: {{states}}</div>
 </br> 
 <table class="stripe" style="font-size:.8em;width:100%" id="status"></table> 
+<div id='sample_id_timeline'>{{sample_id}} </div>
+<div id="visualization"></div>
 
 </br>
 </br>
@@ -43,7 +44,32 @@ $(function() {
             'pageLength': 15,
             "lengthMenu": [[15, 25, 50, -1], [15, 25, 50, "All"]]
         });
+
+    var container = document.getElementById('visualization');
+    // Create a DataSet (allows two way data-binding)
+    // var vis_data = [];
+    // for (item in {{data|safe}}){
+    //     console.log({{item|safe}})
+        // var i;
+        // vis_data.push({id:i['id'], content:i['state'], start:i['date']})
+        // console.log(vis_data)
+        // console.log(i)
+
+    // };
+    var timeline_sample= new vis.DataSet({{vis_data|safe}});
+    // Configuration for the Timeline
+    var options = {};
+    // Create a Timeline
+    var timeline = new vis.Timeline(container, timeline_sample, options);
+    
+    $(function() {
+    $(".sample_id").click(function(){
+    $("#sample_id_timeline").text('Sample ' + $(this).text());
+    })
     });
+    });
+
+
 });
   
 </script>
