@@ -12,7 +12,6 @@ from flask import (
     Blueprint,
 )
 from flask_login import current_user, login_user, logout_user, login_required
-from flask_table import Table, Col
 from datetime import timedelta
 
 from hera_app import app, login_manager, db
