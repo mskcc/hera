@@ -76,7 +76,7 @@ def home():
 def login():
     if current_user.is_authenticated:
         flash('Error: You are already logged in')
-        return redirect(url_for('main.home'))
+        return redirect(url_for('tables.samples'))
     form = LoginForm()
     if request.method == 'POST' and form.validate():
         username = form.username.data
@@ -112,8 +112,8 @@ def login():
             log_info('existing user loaded', user.id, user.username, user.groups)
         login_user(user)
         log_info("user", username, "logged in successfully")
-        flash('You were logged in.')
-        return redirect(url_for('main.home'))
+        flash('You were logged in. Welcome to the Oracle.')
+        return redirect(url_for('tables.samples'))
     if form.errors:
         flash(
             'Error: '

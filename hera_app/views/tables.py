@@ -41,17 +41,19 @@ def status(sample_id=None):
     # TODO grab from state table eventually
     distict_states = engine.execute("SELECT DISTINCT state FROM status").fetchall()
     states = [r for r, in distict_states]
-    columnHeaders = generateColumnHeaders(status_db_columns)
+    columnHeaders = [{'data': 'fk_sample_id', 'title': 'sample_id'}, {'data': 'state', 'title': 'state'},  {'data': 'date', 'title': 'date'}, {'data': 'id', 'title': 'id'}]
+    # print(columnHeaders)
+    # columnHeaders = generateColumnHeaders(status_db_columns)
 
     if sample_id is None:
-        status_db_data = engine.execute("SELECT * FROM status ").fetchall()
+        status_db_data = engine.execute("SELECT fk_sample_id, state, date, id FROM status limit 10").fetchall()
         data = generateStatusData(status_db_data, columnHeaders)
         return render_template(
             "status.html", columnHeaders=columnHeaders, data=data, states=states
         )
     else:
         status_db_data = engine.execute(
-            "SELECT * FROM status WHERE fk_sample_id=" + sample_id
+            "SELECT fk_sample_id, state, date, id FROM status WHERE fk_sample_id=" + sample_id
         ).fetchall()
         data = generateStatusData(status_db_data, columnHeaders)
         vis_data = generateVisData(status_db_data)

@@ -29,3 +29,5 @@ venv
 build
 
 secret_config.py
+
+hera_app.ini

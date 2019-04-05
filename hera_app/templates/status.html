@@ -8,8 +8,21 @@
     
 {% endblock %}
 {% block container %}
- <div id="distinct-states">Available States: {{states}}</div>
+<div class="row">
+<div class="col-6">
+ <div id="distinct-states">
+    {{states|length}} Available States: 
+    <ul>
+    {% for state in states %}
+        <li> {{state|safe}}</li>
+    {% endfor %}
+    </ul>
+
+ </div>
+</div>
+</div>
 </br> 
+<div id="loader" class="loader"></div>
 <table class="stripe" style="font-size:.8em;width:100%" id="status"></table> 
 
 </br>
@@ -29,9 +42,31 @@
     .jsgrid-cell {     
     word-wrap: break-word;
 }
-    .handsontable .htDimmed {
-        color: black !important;
-    }
+
+.handsontable .htDimmed {
+    color: black !important;
+}
+#distinct-states{
+    text-align: justify;
+}
+ul {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+}
+.loader {
+    border: 6px solid  #f3f3f3; /* Light grey */
+    border-top: 6px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
 <script>
 $(function() {
@@ -43,7 +78,11 @@ $(function() {
             'pageLength': 15,
             "lengthMenu": [[15, 25, 50, -1], [15, 25, 50, "All"]]
         });
+
+  
     });
+
+  
 });
   
 </script>
