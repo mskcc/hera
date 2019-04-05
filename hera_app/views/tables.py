@@ -46,7 +46,7 @@ def status(sample_id=None):
     # columnHeaders = generateColumnHeaders(status_db_columns)
 
     if sample_id is None:
-        status_db_data = engine.execute("SELECT fk_sample_id, state, date, id FROM status limit 10").fetchall()
+        status_db_data = engine.execute("SELECT fk_sample_id, state, date, id FROM status").fetchall()
         data = generateStatusData(status_db_data, columnHeaders)
         return render_template(
             "status.html", columnHeaders=columnHeaders, data=data, states=states
