@@ -3,13 +3,17 @@
     
         <h1>Dashboard</h1>
         
-        <a class="btn btn-primary" data-toggle="collapse" href="#collapseGroups" role="button" aria-expanded="false" aria-controls="collapseExample">
-            Click here to see your groups.
-        </a>
-        <div class="collapse" id="collapseGroups">
-            <div class="card card-body " style="text-align: left !important;">
-                {{current_user.groups}}
-            </div>
-        </div>
-    
+          {% for id in ids %}
+                <h3>{{id}}</h3>
+                <div id="{{id}}"></div>
+            {% endfor %}
+        <script type="text/javascript">
+        var graphs = {{graphJSON | safe}};
+        var ids = {{ids | safe}};
+        for(var i in graphs) {
+        Plotly.plot(ids[i], // the ID of the div, created above
+        graphs[i].data,
+        graphs[i].layout || {});
+        }
+        </script>
 {% endblock %}
