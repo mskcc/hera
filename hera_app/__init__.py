@@ -29,7 +29,10 @@ app.register_blueprint(tables)
 from .views.main import main
 app.register_blueprint(main)
 
-
+# different blueprint naming because calling the blueprint and the view function 'dashboard'
+# would mask the global name
+from .views.dashboard import dashboard_blueprint
+app.register_blueprint(dashboard_blueprint)
 
 
 csrf = CSRFProtect(app)

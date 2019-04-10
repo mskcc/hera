@@ -14,6 +14,10 @@ from flask import (
 from flask_login import current_user, login_user, logout_user, login_required
 from datetime import timedelta
 
+
+
+
+
 from hera_app import app, login_manager, db
 from hera_app.auth import User, LoginForm
 
@@ -22,14 +26,14 @@ main = Blueprint('main', __name__)
 
 
 def log_error(*args):
-    print("DELPHI_ERROR:"),
+    print("HERA_ERROR:"),
     for arg in args:
         print(arg),
     print()
 
 
 def log_info(*args):
-    print("DELPHI_INFO:"),
+    print("HERA_INFO:"),
     for arg in args:
         print(arg),
     print()
@@ -76,7 +80,7 @@ def home():
 def login():
     if current_user.is_authenticated:
         flash('Error: You are already logged in')
-        return redirect(url_for('tables.samples'))
+        return redirect(url_for('dashboard.dashboard'))
     form = LoginForm()
     if request.method == 'POST' and form.validate():
         username = form.username.data
@@ -113,7 +117,7 @@ def login():
         login_user(user)
         log_info("user", username, "logged in successfully")
         flash('You were logged in. Welcome to the Oracle.')
-        return redirect(url_for('tables.samples'))
+        return redirect(url_for('dashboard.dashboard'))
     if form.errors:
         flash(
             'Error: '

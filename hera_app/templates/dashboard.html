@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block container %}
+    
+        <h1>Dashboard</h1>
+        
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapseGroups" role="button" aria-expanded="false" aria-controls="collapseExample">
+            Click here to see your groups.
+        </a>
+        <div class="collapse" id="collapseGroups">
+            <div class="card card-body " style="text-align: left !important;">
+                {{current_user.groups}}
+            </div>
+        </div>
+    
+{% endblock %}

@@ -35,13 +35,16 @@
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
+                    <a class="nav-link" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('tables.samples') }}">Samples</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('tables.status') }}">Status</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
                 </li>
                 {% endif %}
             </ul>
