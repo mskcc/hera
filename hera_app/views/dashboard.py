@@ -4,6 +4,7 @@ from flask_login import login_required
 import time
 import datetime
 from datetime import datetime
+import calendar
 from sqlalchemy import create_engine
 import sqlalchemy as db
 import json
@@ -43,6 +44,7 @@ def log_info(*args):
 
 
 @dashboard_blueprint.route("/dashboard")
+@dashboard_blueprint.route("/")
 @login_required
 def dashboard():
     igoSamplesYear = getIGOSamplesYear()
@@ -132,8 +134,8 @@ def dashboard():
         dict(
             data=[
                 dict(
-                    labels=piSamples['y'],
-                    values=piSamples['x'],
+                    labels=piSamples['labels'],
+                    values=piSamples['values'],
                     type='pie',
                     marker=dict(color='#83276B'),
                 )
@@ -173,33 +175,33 @@ def dashboard():
 
 # get all samples processed by day (includes Roslin noise states - maybe limit to group by sample id?)
 def getIGOSamplesYear():
-    log_info("getting igoSamplesYear")
 
     igoSamplesYear_statement = "SELECT count(*),  Year(date) FROM samplestatus.status WHERE state = 'IGO_RECEIVED' GROUP BY YEAR(date);"
-    # igoSamplesYear_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
-
+    log_info('IGO samples by year',igoSamplesYear_statement)
     igoSamplesYear = engine.execute(igoSamplesYear_statement)
     data = {'x': [], 'y': []}
-    print(data['x'])
     for sample in igoSamplesYear:
         data['x'].append(sample[1])
         data['y'].append(sample[0])
     return data
 
 
+
+
+
 def getPiSamples():
     log_info("getting piSamples")
 
-    piSamples_statement = "SELECT investigatorEmail, count(*) as samples FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc limit 10;"
+    piSamples_statement = "SELECT count(*) as samples,investigatorEmail  FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc limit 10;"
     # piSamples_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
 
     piSamples = engine.execute(piSamples_statement)
-    data = {'x': [], 'y': []}
-    print(data['x'])
+    data = {'values': [], 'labels': []}
+    print(data['values'])
     for sample in piSamples:
         print(sample)
-        data['x'].append(sample[1])
-        data['y'].append(sample[0])
+        data['values'].append(sample[0])
+        data['labels'].append(sample[1])
     return data
 
 
@@ -211,7 +213,6 @@ def getTumorTypes():
 
     tumorTypes = engine.execute(tumorTypes_statement)
     data = {'x': [], 'y': []}
-    print(data['x'])
     for sample in tumorTypes:
         # print(sample)
         data['x'].append(sample[1])
@@ -229,7 +230,6 @@ def getRoslinSamplesByYear():
 
     getRoslinSamplesByYear = engine.execute(getRoslinSamplesByYear_statement)
     data = {'x': [], 'y': []}
-    print(data['x'])
     for sample in getRoslinSamplesByYear:
         data['x'].append(sample[1])
         data['y'].append(sample[0])
@@ -239,15 +239,14 @@ def getRoslinSamplesByYear():
 def getRoslinSamplesPast3():
     log_info("getting roslinSamplesPast3")
 
-    roslinSamplesPast3_statement = "SELECT count(*),  MONTH(date) FROM samplestatus.status WHERE state = 'Roslin Done' and  date >= DATE_ADD(NOW(), INTERVAL -3 MONTH)  GROUP BY MONTH(date);"
+    roslinSamplesPast3_statement = "SELECT  month(date), count(*) FROM samplestatus.status WHERE state = 'Roslin Done' and  date >= DATE_ADD(NOW(), INTERVAL -3 MONTH)  GROUP BY month(date) ORDER BY MONTH(date);"
     # roslinSamplesPast3_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
 
     roslinSamplesPast3 = engine.execute(roslinSamplesPast3_statement)
     data = {'x': [], 'y': []}
-    print(data['x'])
     for sample in roslinSamplesPast3:
-        data['x'].append(sample[1])
-        data['y'].append(sample[0])
+        data['x'].append(calendar.month_abbr[sample[0]])
+        data['y'].append(sample[1])
     return data
 
 
@@ -255,15 +254,14 @@ def getRoslinSamplesPast3():
 def getIGOSamplesPast3():
     log_info("getting roslinSamplesPast3")
 
-    igoSamplesPast3_statement = "SELECT count(*),  MONTH(date) FROM samplestatus.status WHERE state = 'IGO_RECEIVED' and  date >= DATE_ADD(NOW(), INTERVAL -3 MONTH)  GROUP BY MONTH(date);"
+    igoSamplesPast3_statement = "SELECT MONTH(date), count(*) FROM samplestatus.status WHERE state = 'IGO_RECEIVED' and  date >= DATE_ADD(NOW(), INTERVAL -3 MONTH) GROUP BY MONTH(date) ORDER BY MONTH(date);"
     # igoSamplesPast3_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
 
     igoSamplesPast3 = engine.execute(igoSamplesPast3_statement)
     data = {'x': [], 'y': []}
-    print(data['x'])
     for sample in igoSamplesPast3:
-        data['x'].append(sample[1])
-        data['y'].append(sample[0])
+        data['x'].append(calendar.month_abbr[sample[0]])
+        data['y'].append(sample[1])
     return data
 
 

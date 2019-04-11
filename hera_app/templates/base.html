@@ -26,7 +26,7 @@
 
 <body>
     <div class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top" role="navigation">
-        <a class="navbar-brand" href="{{ url_for('main.home') }}">Oracle</a>
+        <a class="navbar-brand" href="{{ url_for('dashboard.dashboard') }}">Oracle</a>
         <div class="e" id="navbarText">
             <ul class="navbar-nav mr-auto">
                 {% if not current_user.is_authenticated %}

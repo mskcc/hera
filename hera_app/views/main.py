@@ -68,12 +68,12 @@ def make_session_permanent():
     app.permanent_session_lifetime = timedelta(hours=2)
 
 
-@main.route('/')
-@main.route('/index')
-@main.route('/home', methods=['GET', 'POST'])
-@login_required
-def home():
-    return render_template('home.html')
+# @main.route('/')
+# @main.route('/index')
+# @main.route('/home', methods=['GET', 'POST'])
+# @login_required
+# def home():
+#     return render_template('home.html')
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -137,4 +137,4 @@ def format_result(result):
 def logout():
     logout_user()
     flash('You were logged out.')
-    return redirect(url_for('main.home'))
+    return redirect(url_for('main.login'))
