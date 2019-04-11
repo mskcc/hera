@@ -45,11 +45,14 @@ def log_info(*args):
 @dashboard_blueprint.route("/dashboard")
 @login_required
 def dashboard():
-    samplesPerDay = getSamplesPerDay()
-    samplesProcessedInRoslinDaily = getSamplesProcessedInRoslinDaily()
+    igoSamplesYear = getIGOSamplesYear()
+    # samplesProcessedInRoslinDaily = getSamplesProcessedInRoslinDaily()
+    igoSamplesPast3 = getIGOSamplesPast3()
+    roslinSamplesPast3 = getRoslinSamplesPast3()
     roslinSamplesByYear = getRoslinSamplesByYear()
-    samplesByPi = getSamplesByPi()
-    # return render_template("dashboard.html", samplesPerDay=samplesPerDay)
+    piSamples = getPiSamples()
+    tumorTypes = getTumorTypes()
+    # return render_template("dashboard.html", igoSamplesYear=igoSamplesYear)
     graphs = [
         # dict(
         #     data=[dict(x=[1, 2, 3], y=[10, 20, 30], type='scatter')],
@@ -59,8 +62,8 @@ def dashboard():
         dict(
             data=[
                 dict(
-                    x=samplesPerDay['x'],
-                    y=samplesPerDay['y'],
+                    x=igoSamplesYear['x'],
+                    y=igoSamplesYear['y'],
                     type='bar',
                     marker=dict(color='#83276B'),
                 )
@@ -72,12 +75,6 @@ def dashboard():
                 height=500,
             ),
         ),
-        # dict(
-        #     data=[dict(x=samplesProcessedInRoslinDaily['x'], y=samplesProcessedInRoslinDaily['y'], type='bar')],
-        #     layout=dict(
-        #         title='Samples Processed by Roslin Daily', autosize=False, width=500, height=500
-        #     ),
-        # ),
         dict(
             data=[
                 dict(
@@ -97,13 +94,61 @@ def dashboard():
         dict(
             data=[
                 dict(
-                    labels=samplesByPi['y'],
-                    values=samplesByPi['x'],
+                    x=igoSamplesPast3['x'],
+                    y=igoSamplesPast3['y'],
+                    type='bar',
+                    marker=dict(color='#40B4E5'),
+                )
+            ],
+            layout=dict(
+                title='IGO Samples Received last 3 months',
+                autosize=False,
+                width=500,
+                height=500,
+            ),
+        ),
+        dict(
+            data=[
+                dict(
+                    x=roslinSamplesPast3['x'],
+                    y=roslinSamplesPast3['y'],
+                    type='bar',
+                    marker=dict(color='#4C8B2B'),
+                )
+            ],
+            layout=dict(
+                title='Roslin Samples Received last 3 months',
+                autosize=False,
+                width=500,
+                height=500,
+            ),
+        ),
+        dict(
+            data=[
+                dict(
+                    labels=piSamples['y'],
+                    values=piSamples['x'],
                     type='pie',
                     marker=dict(color='#83276B'),
                 )
             ],
-            layout=dict(title='Top Ten PIs', autosize=False, width=500, height=500),
+            layout=dict(
+                title='Top Ten PIs by Number of WES Samples',
+                autosize=False,
+                width=500,
+                height=500,
+            ),
+        ),
+        dict(
+            data=[
+                dict(
+                    labels=tumorTypes['y'],
+                    values=tumorTypes['x'],
+                    type='pie',
+                    marker=dict(color='#83276B'),
+                )
+            ],
+            layout=dict(title='Tumor Types', autosize=False, width=500, height=500),
         ),
     ]
     # rng = pd.date_range('1/1/2011', periods=7500, freq='H')
@@ -121,52 +166,52 @@ def dashboard():
 
 
 # get all samples processed by day (includes Roslin noise states - maybe limit to group by sample id?)
-def getSamplesPerDay():
-    log_info("getting samplesPerDay")
+def getIGOSamplesYear():
+    log_info("getting igoSamplesYear")
 
-    samplesPerDay_statement = "SELECT count(*),  Year(date) FROM samplestatus.status WHERE state = 'IGO_RECEIVED' GROUP BY YEAR(date);"
-    # samplesPerDay_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
+    igoSamplesYear_statement = "SELECT count(*),  Year(date) FROM samplestatus.status WHERE state = 'IGO_RECEIVED' GROUP BY YEAR(date);"
+    # igoSamplesYear_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
 
-    samplesPerDay = engine.execute(samplesPerDay_statement)
+    igoSamplesYear = engine.execute(igoSamplesYear_statement)
     data = {'x': [], 'y': []}
     print(data['x'])
-    for sample in samplesPerDay:
+    for sample in igoSamplesYear:
         data['x'].append(sample[1])
         data['y'].append(sample[0])
     return data
 
 
-def getSamplesByPi():
-    log_info("getting samplesByPi")
+def getPiSamples():
+    log_info("getting piSamples")
 
-    samplesByPi_statement = "SELECT investigatorEmail, count(*) as samples FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc limit 10;"
-    # samplesByPi_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
+    piSamples_statement = "SELECT investigatorEmail, count(*) as samples FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc limit 10;"
+    # piSamples_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
 
-    samplesByPi = engine.execute(samplesByPi_statement)
+    piSamples = engine.execute(piSamples_statement)
     data = {'x': [], 'y': []}
     print(data['x'])
-    for sample in samplesByPi:
+    for sample in piSamples:
         print(sample)
         data['x'].append(sample[1])
         data['y'].append(sample[0])
     return data
 
 
-# get all samples processed by day (includes Roslin noise states - maybe limit to group by sample id?)
-def getSamplesProcessedInRoslinDaily():
-    log_info("getting samplesProcessedInRoslinDaily")
+def getTumorTypes():
+    log_info("getting tumorTypes")
 
-    samplesProcessedInRoslinDaily_statement = "SELECT count(*),  DAY(date) FROM samplestatus.status WHERE state = 'Roslin Done' GROUP BY DAY(date);"
-    # samplesProcessedInRoslinDaily_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
+    tumorTypes_statement = "SELECT tumorOrNormal, count(*) FROM samplestatus.sample GROUP BY tumorOrNormal;"
+    # tumorTypes_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
 
-    samplesProcessedInRoslinDaily = engine.execute(
-        samplesProcessedInRoslinDaily_statement
-    )
+    tumorTypes = engine.execute(tumorTypes_statement)
     data = {'x': [], 'y': []}
     print(data['x'])
-    for sample in samplesProcessedInRoslinDaily:
+    for sample in tumorTypes:
+        # print(sample)
         data['x'].append(sample[1])
         data['y'].append(sample[0])
+    if data['y'][2] == '':
+        data['y'][2] = 'n/a'
     return data
 
 
@@ -180,6 +225,37 @@ def getRoslinSamplesByYear():
     data = {'x': [], 'y': []}
     print(data['x'])
     for sample in getRoslinSamplesByYear:
+        data['x'].append(sample[1])
+        data['y'].append(sample[0])
+    return data
+
+
+def getRoslinSamplesPast3():
+    log_info("getting roslinSamplesPast3")
+
+    roslinSamplesPast3_statement = "SELECT count(*),  MONTH(date) FROM samplestatus.status WHERE state = 'Roslin Done' and  date >= DATE_ADD(NOW(), INTERVAL -3 MONTH)  GROUP BY MONTH(date);"
+    # roslinSamplesPast3_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
+
+    roslinSamplesPast3 = engine.execute(roslinSamplesPast3_statement)
+    data = {'x': [], 'y': []}
+    print(data['x'])
+    for sample in roslinSamplesPast3:
+        data['x'].append(sample[1])
+        data['y'].append(sample[0])
+    return data
+
+
+
+def getIGOSamplesPast3():
+    log_info("getting roslinSamplesPast3")
+
+    igoSamplesPast3_statement = "SELECT count(*),  MONTH(date) FROM samplestatus.status WHERE state = 'IGO_RECEIVED' and  date >= DATE_ADD(NOW(), INTERVAL -3 MONTH)  GROUP BY MONTH(date);"
+    # igoSamplesPast3_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
+
+    igoSamplesPast3 = engine.execute(igoSamplesPast3_statement)
+    data = {'x': [], 'y': []}
+    print(data['x'])
+    for sample in igoSamplesPast3:
         data['x'].append(sample[1])
         data['y'].append(sample[0])
     return data
