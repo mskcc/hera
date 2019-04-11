@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block container %}
     
-        <h1>Dashboard</h1>
+        <h1>WES Dashboard</h1>
         
           {% for id in ids %}
-                <h3>{{id}}</h3>
-                <div id="{{id}}"></div>
+                {# <h3>{{id}}</h3> #}
+                <span id="{{id}}"></span>
             {% endfor %}
         <script type="text/javascript">
         var graphs = {{graphJSON | safe}};
@@ -13,7 +13,7 @@
         for(var i in graphs) {
         Plotly.plot(ids[i], // the ID of the div, created above
         graphs[i].data,
-        graphs[i].layout || {});
+        graphs[i].layout || {grid: {rows: 1, columns: 2, pattern: 'independent'},});
         }
         </script>
 {% endblock %}

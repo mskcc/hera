@@ -15,6 +15,7 @@ import numpy as np
 
 import plotly.plotly as py
 import plotly.figure_factory as ff
+from plotly import tools
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
 
@@ -45,6 +46,9 @@ def log_info(*args):
 @login_required
 def dashboard():
     samplesPerDay = getSamplesPerDay()
+    samplesProcessedInRoslinDaily = getSamplesProcessedInRoslinDaily()
+    roslinSamplesByYear = getRoslinSamplesByYear()
+    samplesByPi = getSamplesByPi()
     # return render_template("dashboard.html", samplesPerDay=samplesPerDay)
     graphs = [
         # dict(
@@ -53,9 +57,54 @@ def dashboard():
         # ),
         # x = month/year y = #samples
         dict(
-            data=[dict(x=samplesPerDay['x'], y=samplesPerDay['y'], type='bar')],
-            layout=dict(title='second graph'),
-        )
+            data=[
+                dict(
+                    x=samplesPerDay['x'],
+                    y=samplesPerDay['y'],
+                    type='bar',
+                    marker=dict(color='#83276B'),
+                )
+            ],
+            layout=dict(
+                title='IGO Samples Received Per Year',
+                autosize=False,
+                width=500,
+                height=500,
+            ),
+        ),
+        # dict(
+        #     data=[dict(x=samplesProcessedInRoslinDaily['x'], y=samplesProcessedInRoslinDaily['y'], type='bar')],
+        #     layout=dict(
+        #         title='Samples Processed by Roslin Daily', autosize=False, width=500, height=500
+        #     ),
+        # ),
+        dict(
+            data=[
+                dict(
+                    x=roslinSamplesByYear['x'],
+                    y=roslinSamplesByYear['y'],
+                    type='bar',
+                    marker=dict(color='#DF4602'),
+                )
+            ],
+            layout=dict(
+                title='Roslin Samples Received By Year',
+                autosize=False,
+                width=500,
+                height=500,
+            ),
+        ),
+        dict(
+            data=[
+                dict(
+                    labels=samplesByPi['y'],
+                    values=samplesByPi['x'],
+                    type='pie',
+                    marker=dict(color='#83276B'),
+                )
+            ],
+            layout=dict(title='Top Ten PIs', autosize=False, width=500, height=500),
+        ),
     ]
     # rng = pd.date_range('1/1/2011', periods=7500, freq='H')
     # ts = pd.Series(np.random.randn(len(rng)), index=rng)
@@ -75,15 +124,62 @@ def dashboard():
 def getSamplesPerDay():
     log_info("getting samplesPerDay")
 
-    samplesPerDay_statement = (
-        "SELECT count(*),  Year(date) FROM samplestatus.status GROUP BY YEAR(date);"
-    )
+    samplesPerDay_statement = "SELECT count(*),  Year(date) FROM samplestatus.status WHERE state = 'IGO_RECEIVED' GROUP BY YEAR(date);"
     # samplesPerDay_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
 
     samplesPerDay = engine.execute(samplesPerDay_statement)
-    data = {'x':[],'y':[]}
+    data = {'x': [], 'y': []}
     print(data['x'])
     for sample in samplesPerDay:
+        data['x'].append(sample[1])
+        data['y'].append(sample[0])
+    return data
+
+
+def getSamplesByPi():
+    log_info("getting samplesByPi")
+
+    samplesByPi_statement = "SELECT investigatorEmail, count(*) as samples FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc limit 10;"
+    # samplesByPi_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
+
+    samplesByPi = engine.execute(samplesByPi_statement)
+    data = {'x': [], 'y': []}
+    print(data['x'])
+    for sample in samplesByPi:
+        print(sample)
+        data['x'].append(sample[1])
+        data['y'].append(sample[0])
+    return data
+
+
+# get all samples processed by day (includes Roslin noise states - maybe limit to group by sample id?)
+def getSamplesProcessedInRoslinDaily():
+    log_info("getting samplesProcessedInRoslinDaily")
+
+    samplesProcessedInRoslinDaily_statement = "SELECT count(*),  DAY(date) FROM samplestatus.status WHERE state = 'Roslin Done' GROUP BY DAY(date);"
+    # samplesProcessedInRoslinDaily_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
+
+    samplesProcessedInRoslinDaily = engine.execute(
+        samplesProcessedInRoslinDaily_statement
+    )
+    data = {'x': [], 'y': []}
+    print(data['x'])
+    for sample in samplesProcessedInRoslinDaily:
+        data['x'].append(sample[1])
+        data['y'].append(sample[0])
+    return data
+
+
+def getRoslinSamplesByYear():
+    log_info("getting roslinSamplesByYear")
+
+    getRoslinSamplesByYear_statement = "SELECT count(*),  YEAR(date) FROM samplestatus.status WHERE state = 'Roslin Done' GROUP BY YEAR(date);"
+    # getRoslinSamplesByYear_statement = "SELECT count(*),  MONTH(date), Year(date) FROM samplestatus.status GROUP BY YEAR(date), MONTH(date);"
+
+    getRoslinSamplesByYear = engine.execute(getRoslinSamplesByYear_statement)
+    data = {'x': [], 'y': []}
+    print(data['x'])
+    for sample in getRoslinSamplesByYear:
         data['x'].append(sample[1])
         data['y'].append(sample[0])
     return data
