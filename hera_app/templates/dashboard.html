@@ -1,19 +1,38 @@
 {% extends 'base.html' %}
 {% block container %}
+    <h1>WES Dashboard</h1>
+    <div class='row'>
+    <div class="dashboard">
+        {% for id in ids %}
+            {# <h3>{{id}}</h3> #}
+            <span id="{{id}}" class="{{id}}-class"></span>
+        {% endfor %}
     
-        <h1>WES Dashboard</h1>
-        
-          {% for id in ids %}
-                {# <h3>{{id}}</h3> #}
-                <span id="{{id}}"></span>
-            {% endfor %}
-        <script type="text/javascript">
-        var graphs = {{graphJSON | safe}};
-        var ids = {{ids | safe}};
-        for(var i in graphs) {
-        Plotly.plot(ids[i], // the ID of the div, created above
-        graphs[i].data,
-        graphs[i].layout || {grid: {rows: 1, columns: 2, pattern: 'independent'},});
-        }
-        </script>
+
+    </div>
+    </div>
+
+
+
+<style type="text/css">
+    .dashboard {
+    width: 100%;     
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+
+/*    grid-template-columns: 1fr 1fr;
+*/}
+</style>
+<script type="text/javascript">
+    var graphs = {{graphJSON | safe}};
+    var ids = {{ids | safe}};
+    for(var i in graphs) {
+    Plotly.plot(ids[i], // the ID of the div, created above
+    graphs[i].data,
+    graphs[i].layout || {grid: {rows: 1, columns: 2, pattern: 'independent'},});
+}
+</script>
+
+
+
 {% endblock %}

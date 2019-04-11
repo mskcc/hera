@@ -80,16 +80,21 @@ def dashboard():
                 dict(
                     x=roslinSamplesByYear['x'],
                     y=roslinSamplesByYear['y'],
+                    width="0.4",
                     type='bar',
                     marker=dict(color='#DF4602'),
-                )
-            ],
+
+            )],
             layout=dict(
                 title='Roslin Samples Received By Year',
                 autosize=False,
                 width=500,
                 height=500,
-            ),
+                xaxis=dict(
+                        nticks = len(roslinSamplesByYear['x'])+1
+                        )
+                )
+            
         ),
         dict(
             data=[
@@ -98,6 +103,7 @@ def dashboard():
                     y=igoSamplesPast3['y'],
                     type='bar',
                     marker=dict(color='#40B4E5'),
+
                 )
             ],
             layout=dict(
