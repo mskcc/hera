@@ -8,7 +8,7 @@
     <title>Oracle</title>
     {% block additional_js_top %}{% endblock %}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+    
     <!-- <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" /> -->
     <!-- <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" /> -->
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" />
@@ -21,6 +21,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" media="screen">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
     {% block additional_js_bottom %}{% endblock %}
 </head>
 
