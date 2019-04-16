@@ -29,20 +29,6 @@ engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
 dashboard_blueprint = Blueprint("dashboard", __name__)
 
 
-def log_error(*args):
-    print("HERA_ERROR:"),
-    for arg in args:
-        print(arg),
-    print()
-
-
-def log_info(*args):
-    print("HERA_INFO:"),
-    for arg in args:
-        print(arg),
-    print()
-
-
 @dashboard_blueprint.route("/dashboard")
 @dashboard_blueprint.route("/")
 @login_required
@@ -165,7 +151,7 @@ def dashboard():
 
 def getIGOSamplesYear():
     igoSamplesYear_statement = "SELECT count(*),  Year(date) FROM samplestatus.status WHERE state = 'IGO_RECEIVED' GROUP BY YEAR(date);"
-    log_info('IGO samples by year', igoSamplesYear_statement)
+    app.logger.info('IGO samples by year ' + igoSamplesYear_statement)
     igoSamplesYear = engine.execute(igoSamplesYear_statement)
     data = {'x': [], 'y': []}
     for sample in igoSamplesYear:
@@ -177,21 +163,18 @@ def getIGOSamplesYear():
 def getPiSamples():
     piSamples_statement = "with top10 as (select  count(*)  as samples, investigatorEmail from samplestatus.sample GROUP BY investigatorEmail order by samples desc limit 10) select * from top10 union all select count(*), 'other' as investigatorEmail from samplestatus.sample where investigatorEmail not in (select investigatorEmail from top10);"
     # piSamplesOther_statement = "SELECT count(*) as samples,investigatorEmail  FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc offset 10;"
-    log_info("getting piSamples", piSamples_statement)
+    app.logger.info("getting piSamples: " +piSamples_statement)
     piSamples = engine.execute(piSamples_statement)
     data = {'values': [], 'labels': []}
     for sample in piSamples:
-        print(sample)
         data['values'].append(sample[0])
         data['labels'].append(sample[1])
-
-    
     return data
 
 
 def getTumorTypes():
     tumorTypes_statement = "SELECT tumorOrNormal, count(*) FROM samplestatus.sample GROUP BY tumorOrNormal;"
-    log_info("getting tumorTypes", tumorTypes_statement)
+    app.logger.info("getting tumorTypes: " +tumorTypes_statement)
     tumorTypes = engine.execute(tumorTypes_statement)
     data = {'x': [], 'y': []}
     for sample in tumorTypes:
@@ -204,7 +187,7 @@ def getTumorTypes():
 
 def getRoslinSamplesByYear():
     getRoslinSamplesByYear_statement = "SELECT count(*),  YEAR(date) FROM samplestatus.status WHERE state = 'Roslin Done' GROUP BY YEAR(date);"
-    log_info("getting roslinSamplesByYear", getRoslinSamplesByYear_statement)
+    app.logger.info("getting roslinSamplesByYear: " +getRoslinSamplesByYear_statement)
     getRoslinSamplesByYear = engine.execute(getRoslinSamplesByYear_statement)
     data = {'x': [], 'y': []}
     for sample in getRoslinSamplesByYear:
@@ -215,7 +198,7 @@ def getRoslinSamplesByYear():
 
 def getRoslinSamplesPast3():
     roslinSamplesPast3_statement = "SELECT  month(date), count(*) FROM samplestatus.status WHERE state = 'Roslin Done' and  date >= DATE_ADD(NOW(), INTERVAL -3 MONTH)  GROUP BY month(date) ORDER BY MONTH(date);"
-    log_info("getting roslinSamplesPast3", roslinSamplesPast3_statement)
+    app.logger.info("getting roslinSamplesPast3: " +roslinSamplesPast3_statement)
     roslinSamplesPast3 = engine.execute(roslinSamplesPast3_statement)
     data = {'x': [], 'y': []}
     for sample in roslinSamplesPast3:
@@ -226,7 +209,7 @@ def getRoslinSamplesPast3():
 
 def getIGOSamplesPast3():
     igoSamplesPast3_statement = "SELECT MONTH(date), count(*) FROM samplestatus.status WHERE state = 'IGO_RECEIVED' and  date >= DATE_ADD(NOW(), INTERVAL -3 MONTH) GROUP BY MONTH(date) ORDER BY MONTH(date);"
-    log_info("getting igoSamplesPast3", igoSamplesPast3_statement)
+    app.logger.info("getting igoSamplesPast3: " +igoSamplesPast3_statement)
     igoSamplesPast3 = engine.execute(igoSamplesPast3_statement)
     data = {'x': [], 'y': []}
     for sample in igoSamplesPast3:
@@ -235,108 +218,3 @@ def getIGOSamplesPast3():
     return data
 
 
-# @dashboard_blueprint.route('/dashboard')
-# def dashboard():
-#     rng = pd.date_range('1/1/2011', periods=7500, freq='H')
-#     ts = pd.Series(np.random.randn(len(rng)), index=rng)
-
-#     graphs = [
-#         dict(
-#             data=[dict(x=[1, 2, 3], y=[10, 20, 30], type='scatter')],
-#             layout=dict(title='first graph'),
-#         ),
-#         dict(
-#             data=[dict(x=[1, 3, 5], y=[10, 50, 30], type='bar')],
-#             layout=dict(title='second graph'),
-#         ),
-#         dict(
-#             data=[dict(x=ts.index, y=ts)]  # Can use the pandas data structures directly
-#         ),
-#         dict(
-#             data=[
-#                 dict(
-#                     Task='Morning Sleep',
-#                     Start='2016-01-01',
-#                     Finish='2016-01-01 6:00:00',
-#                     Resource='Sleep',type='gantt',
-#                 ),
-#                 dict(
-#                     Task='Breakfast',
-#                     Start='2016-01-01 7:00:00',
-#                     Finish='2016-01-01 7:30:00',
-#                     Resource='Food',type='gantt',
-#                 ),
-#                 dict(
-#                     Task='Work',
-#                     Start='2016-01-01 9:00:00',
-#                     Finish='2016-01-01 11:25:00',
-#                     Resource='Brain',type='gantt',
-#                 ),
-#                 dict(
-#                     Task='Break',
-#                     Start='2016-01-01 11:30:00',
-#                     Finish='2016-01-01 12:00:00',
-#                     Resource='Rest',type='gantt',
-#                 ),
-#                 dict(
-#                     Task='Lunch',
-#                     Start='2016-01-01 12:00:00',
-#                     Finish='2016-01-01 13:00:00',
-#                     Resource='Food',type='gantt',
-#                 ),
-#                 dict(
-#                     Task='Work',
-#                     Start='2016-01-01 13:00:00',
-#                     Finish='2016-01-01 17:00:00',
-#                     Resource='Brain',type='gantt',
-#                 ),
-#                 dict(
-#                     Task='Exercise',
-#                     Start='2016-01-01 17:30:00',
-#                     Finish='2016-01-01 18:30:00',
-#                     Resource='Cardio',type='gantt',
-#                 ),
-#                 dict(
-#                     Task='Post Workout Rest',
-#                     Start='2016-01-01 18:30:00',
-#                     Finish='2016-01-01 19:00:00',
-#                     Resource='Rest',type='gantt',
-#                 ),
-#                 dict(
-#                     Task='Dinner',
-#                     Start='2016-01-01 19:00:00',
-#                     Finish='2016-01-01 20:00:00',
-#                     Resource='Food',type='gantt',
-#                 ),
-#                 dict(
-#                     Task='Evening Sleep',
-#                     Start='2016-01-01 21:00:00',
-#                     Finish='2016-01-01 23:59:00',
-#                     Resource='Sleep',type='gantt',
-
-#                 ),
-#             ]
-#         ),
-#     ]
-
-#     # Add "ids" to each of the graphs to pass up to the client
-#     # for templating
-#     ids = ['graph-{}'.format(i) for i, _ in enumerate(graphs)]
-
-#     fig = ff.create_gantt(
-#         df,
-#         colors=colors,
-#         index_col='Resource',
-#         title='Daily Schedule',
-#         show_colorbar=True,
-#         bar_width=0.8,
-#         showgrid_x=True,
-#         showgrid_y=True,
-#     )
-#     # iplot(fig)
-
-#     # Convert the figures to JSON
-#     # PlotlyJSONEncoder appropriately converts pandas, datetime, etc
-#     # objects to their JSON equivalents
-#     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
-#     return render_template('/dashboard.html', ids=ids, graphJSON=graphJSON)
