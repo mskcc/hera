@@ -17,29 +17,34 @@ class User(db.Model, UserMixin):
 
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(40), nullable=False)
-    groups = db.Column(db.Text, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    full_name = db.Column(db.String(40), nullable=True)
+    username = db.Column(db.String(40), nullable=False, unique=True)
+    msk_group = db.Column(db.String(40), nullable=True)
+    role = db.Column(db.String(40), nullable=True)
 
-    def __init__(self, username, groups):
+
+    def __init__(self, username, full_name=None, msk_group=None, role='user'):
         self.username = username
-        self.groups = groups
+        self.msk_group = msk_group 
+        self.role = role 
+        self.full_name = full_name 
 
     @staticmethod
     def try_login(username, password):
         conn = get_ldap_connection()
 
         conn.simple_bind_s('%s@mskcc.org' % username, password)
-        attrs = ['memberOf']
+        # attrs = ['memberOf']
         # attrs = ['sAMAccountName', 'displayName', 'memberOf', 'title']
-        result = conn.search_s(
-            'DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG',
-            ldap.SCOPE_SUBTREE,
-            'sAMAccountName=wagnerl',
-            attrs,
-        )
+        # result = conn.search_s(
+        #     'DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG',
+        #     ldap.SCOPE_SUBTREE,
+        #     'sAMAccountName=wagnerl',
+        #     attrs,
+        # )
         conn.unbind_s()
-        return result
+        # return result
 
     @property
     def is_authenticated(self):
@@ -56,15 +61,24 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return str(self.id)
 
-    def get_groups(self):
-        return str(self.groups)
+    def get_user_name(self):
+        return str(self.user_name)
+
+    def get_full_name(self):
+        return str(self.full_name)
+
+    def get_msk_group(self):
+        return str(self.msk_group)
+
+    def get_role(self):
+        return str(self.role)
 
     @property
     def serialize(self):
         """Return object data in easily serializable format"""
-        return {'id': self.id, 'udername': self.username, 'groups': self.groups}
+        return {'id': self.id, 'username': self.username, 'msk_group': self.msk_group, 'role': self.role}
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', [InputRequired('Username is required')])
+    username = StringField('Username', [InputRequired('MSK username is required')])
     password = PasswordField('Password', [InputRequired('Password is required')])
