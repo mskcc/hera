@@ -21,6 +21,7 @@ from hera_app.auth import User, LoginForm
 
 user = Blueprint('user', __name__)
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -28,6 +29,7 @@ def load_user(user_id):
 
 def load_username(username):
     return User.query.filter_by(username=username).first()
+
 
 @user.before_request
 def make_session_permanent():
@@ -45,10 +47,10 @@ def login():
         username = form.username.data
         password = form.password.data
         if '@' in username:
-            log_error(
-                "user",
-                username,
-                "trying to login with email address instead of MSK user id",
+            app.logger.error(
+                "user "
+                + username
+                + " trying to login with email address instead of MSK user id"
             )
             flash(
                 'Error: Please use your MSK user ID instead of email address as Username'
@@ -58,19 +60,29 @@ def login():
         try:
             result = User.try_login(username, password)
         except ldap.INVALID_CREDENTIALS:
-            log_error("user", username, "trying to login with invalid credentials")
+            app.logger.error(
+                "user " + username + " trying to login with invalid credentials"
+            )
             flash('Error: Invalid username or password. Please try again.')
             return render_template('login.html', form=form), 401
         user = load_username(username)
         if not user:
             #  TODO change to role based
-            log_error("user", username, "AD authenticated but not in users table")
-            flash(Markup('Error: Your user role is not authorized to view this webiste. Please email <a href="mailto:wagnerl@mkscc.org">delphi support</a> if you need any assistance.'))
-            return render_template('login.html', form=form), 401   
+            app.logger.error(
+                "user " + username + " AD authenticated but not in users table"
+            )
+            flash(
+                Markup(
+                    'Error: Your user role is not authorized to view this webiste. Please email <a href="mailto:wagnerl@mkscc.org">delphi support</a> if you need any assistance.'
+                )
+            )
+            return render_template('login.html', form=form), 401
         else:
-            log_info('authorized user loaded', user.id, user.username)
+            app.logger.info(
+                'authorized user loaded: ' + str(user.id) + ', ' + user.username
+            )
             login_user(user)
-            log_info("user", username, "logged in successfully")
+            app.logger.info("user " + username + " logged in successfully")
             flash('You were logged in. Welcome to the Oracle.')
             return redirect(url_for('dashboard.dashboard'))
     if form.errors:
@@ -80,14 +92,20 @@ def login():
         )
     return render_template('login.html', form=form)
 
+
 @user.route('/logout')
 @login_required
 def logout():
+    username = current_user.username
     logout_user()
     flash('You were logged out.')
+    app.logger.info("user " + username + " logged out successfully")
+
     return redirect(url_for('user.login'))
 
+
 # LOGGING
+
 
 def log_error(*args):
     print("HERA_ERROR:"),
@@ -95,19 +113,21 @@ def log_error(*args):
         print(arg),
     print()
 
+
 def log_info(*args):
     print("HERA_INFO:"),
     for arg in args:
         print(arg),
     print()
 
+
 #  NO LONGER USED
+
 
 def format_result(result):
     p = re.compile('CN=(.*?)\,')
     groups = re.sub('CN=Users', '', str(result))
     return p.findall(groups)
-
 
 
 def current_user_name():
