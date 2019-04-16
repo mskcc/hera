@@ -20,6 +20,8 @@ engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
 @tables.route("/samples")
 @login_required
 def samples():
+    app.logger.info("generating sample table data ")
+
     #  move to sth more persistent once columns are more finalized
     sample_id_db_columns = engine.execute(
         'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA="samplestatus"  AND TABLE_NAME="sample";'
@@ -46,12 +48,14 @@ def status(sample_id=None):
     # columnHeaders = generateColumnHeaders(status_db_columns)
 
     if sample_id is None:
+        app.logger.info("generating complete status table data ")
         status_db_data = engine.execute("SELECT fk_sample_id, state, date, id FROM status").fetchall()
         data = generateStatusData(status_db_data, columnHeaders)
         return render_template(
             "status.html", columnHeaders=columnHeaders, data=data, states=states
         )
     else:
+        app.logger.info("generating sample status table data ")
         status_db_data = engine.execute(
             "SELECT fk_sample_id, state, date, id FROM status WHERE fk_sample_id=" + sample_id
         ).fetchall()
