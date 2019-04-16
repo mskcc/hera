@@ -32,7 +32,7 @@
             <ul class="navbar-nav mr-auto">
                 {% if not current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.login') }}">Login</a>
+                    <a class="nav-link" href="{{ url_for('user.login') }}">Login</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
@@ -45,7 +45,7 @@
                     <a class="nav-link" href="{{ url_for('tables.status') }}">Status</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
+                    <a class="nav-link" href="{{ url_for('user.logout') }}">Logout</a>
                 </li>
                 {% endif %}
             </ul>

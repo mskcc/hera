@@ -12,7 +12,6 @@ def get_ldap_connection():
     conn.set_option(ldap.OPT_REFERRALS, 0)    
     return conn
 
-
 class User(db.Model, UserMixin):
 
     __tablename__ = "users"
@@ -22,7 +21,6 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(40), nullable=False, unique=True)
     msk_group = db.Column(db.String(40), nullable=True)
     role = db.Column(db.String(40), nullable=True)
-
 
     def __init__(self, username, full_name=None, msk_group=None, role='user'):
         self.username = username
@@ -44,7 +42,6 @@ class User(db.Model, UserMixin):
         #     attrs,
         # )
         conn.unbind_s()
-        # return result
 
     @property
     def is_authenticated(self):
@@ -77,7 +74,6 @@ class User(db.Model, UserMixin):
     def serialize(self):
         """Return object data in easily serializable format"""
         return {'id': self.id, 'username': self.username, 'msk_group': self.msk_group, 'role': self.role}
-
 
 class LoginForm(FlaskForm):
     username = StringField('Username', [InputRequired('MSK username is required')])

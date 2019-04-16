@@ -12,7 +12,7 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'main.login'
+login_manager.login_view = 'user.login'
 login_manager.login_message = ''
 
 
@@ -26,8 +26,8 @@ db.session.commit()
 from .views.tables import tables
 app.register_blueprint(tables)
 
-from .views.main import main
-app.register_blueprint(main)
+from .views.user import user
+app.register_blueprint(user)
 
 # different blueprint naming because calling the blueprint and the view function 'dashboard'
 # would mask the global name
