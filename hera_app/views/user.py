@@ -10,6 +10,7 @@ from flask import (
     jsonify,
     session,
     Blueprint,
+    Markup,
 )
 from flask_login import current_user, login_user, logout_user, login_required
 from datetime import timedelta
@@ -64,7 +65,7 @@ def login():
         if not user:
             #  TODO change to role based
             log_error("user", username, "AD authenticated but not in users table")
-            flash('Error: You are not autorized to view this webiste. Please email xyz@mskcc.org to gain access.')
+            flash(Markup('Error: Your user role is not authorized to view this webiste. Please email <a href="mailto:wagnerl@mkscc.org">delphi support</a> if you need any assistance.'))
             return render_template('login.html', form=form), 401   
         else:
             log_info('authorized user loaded', user.id, user.username)
