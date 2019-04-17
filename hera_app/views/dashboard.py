@@ -123,18 +123,37 @@ def dashboard():
                 width=500,
                 height=500,
             ),
-        ),
+        ), 
+        
         dict(
             data=[
                 dict(
-                    labels=tumorTypes['y'],
-                    values=tumorTypes['x'],
-                    type='pie',
-                    marker=dict(color='#83276B'),
+                    x=tumorTypes['labels'],
+                    y=tumorTypes['values'],
+                    type='bar',
+                    marker=dict(color='#009490'),
                 )
             ],
-            layout=dict(title='Tumor Types', autosize=False, width=500, height=500),
+            layout=dict(
+                title='Most Common Tumor Types',
+                barmode='stack',
+                autosize=False,
+                width=500,
+                height=500,
+            ),
         ),
+
+        # dict(
+        #     data=[
+        #         dict(
+        #             labels=tumorTypes['y'],
+        #             values=tumorTypes['x'],
+        #             type='pie',
+        #             marker=dict(color='#83276B'),
+        #         )
+        #     ],
+        #     layout=dict(title='Tumor Types', autosize=False, width=500, height=500),
+        # ),
     ]
     # rng = pd.date_range('1/1/2011', periods=7500, freq='H')
     # ts = pd.Series(np.random.randn(len(rng)), index=rng)
@@ -171,7 +190,7 @@ def getIGOSamplesYear():
 
 
 def getPiSamples():
-    piSamples_statement = "with top10 as (select  count(*)  as samples, investigator from samplestatus.sample GROUP BY investigator order by samples desc limit 10) select * from top10 union all select count(*), 'other' as investigator from samplestatus.sample where investigator not in (select investigator from top10);"
+    piSamples_statement = "with top10 as (select  count(*)  as samples, investigator from samplestatus.sample GROUP BY investigator order by samples limit 10) select * from top10 union all select count(*), 'other' as investigator from samplestatus.sample where investigator not in (select investigator from top10);"
     # piSamplesOther_statement = "SELECT count(*) as samples,investigatorEmail  FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc offset 10;"
     app.logger.info("getting piSamples: " + piSamples_statement)
     piSamples = engine.execute(piSamples_statement)
@@ -183,16 +202,29 @@ def getPiSamples():
 
 
 def getTumorTypes():
-    tumorTypes_statement = "SELECT tumorOrNormal, count(*) FROM samplestatus.sample GROUP BY tumorOrNormal;"
+    # tumorTypes_statement = "with top10 as (select  count(*)  as samples, tumorType from samplestatus.sample WHERE tumorType is not null and tumorType != '' and tumorType != 'Normal'   GROUP BY tumorType order by samples desc limit 10) select * from top10 union all select count(*), 'other' as tumorType from samplestatus.sample where tumorType not in (select tumorType from top10);"
+    tumorTypes_statement = "select  count(*)  as samples, tumorType from samplestatus.sample WHERE tumorType is not null and tumorType != '' and tumorType != 'Normal'   GROUP BY tumorType Order by samples;"
+    # tumorTypesOther_statement = "SELECT count(*) as samples,tumorTypeEmail  FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc offset 10;"
     app.logger.info("getting tumorTypes: " + tumorTypes_statement)
     tumorTypes = engine.execute(tumorTypes_statement)
-    data = {'x': [], 'y': []}
+    data = {'values': [], 'labels': []}
     for sample in tumorTypes:
-        data['x'].append(sample[1])
-        data['y'].append(sample[0])
-    if data['y'][2] == '':
-        data['y'][2] = 'n/a'
+        data['values'].append(sample[0])
+        data['labels'].append(sample[1])
     return data
+
+# piechart
+# def getTumorTypes():
+#     tumorTypes_statement = "SELECT tumorOrNormal, count(*) FROM samplestatus.sample GROUP BY tumorOrNormal;"
+#     app.logger.info("getting tumorTypes: " + tumorTypes_statement)
+#     tumorTypes = engine.execute(tumorTypes_statement)
+#     data = {'x': [], 'y': []}
+#     for sample in tumorTypes:
+#         data['x'].append(sample[1])
+#         data['y'].append(sample[0])
+#     if data['y'][2] == '':
+#         data['y'][2] = 'n/a'
+#     return data
 
 
 def getRoslinSamplesByYear():
