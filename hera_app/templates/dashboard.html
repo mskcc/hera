@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block container %}
     <h1>WES Dashboard</h1>
+    <h4>{{sampleCount}} samples on Delphi</h4>
     <div class='row'>
     <div class="dashboard">
         {% for id in ids %}
@@ -19,7 +20,10 @@
     background-color: #cfd8dc !important;
     }
     h1{
-        margin-bottom: 2em;
+        margin-bottom: .2em;
+    }
+    h4{
+        margin-bottom: 1.7em;
     }
     .dashboard {
     width: 100%;     

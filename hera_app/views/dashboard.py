@@ -33,6 +33,7 @@ dashboard_blueprint = Blueprint("dashboard", __name__)
 @dashboard_blueprint.route("/")
 @login_required
 def dashboard():
+    sampleCount = getSampleCount()
     igoSamplesYear = getIGOSamplesYear()
     igoSamplesPast3 = getIGOSamplesPast3()
     roslinSamplesPast3 = getRoslinSamplesPast3()
@@ -146,7 +147,16 @@ def dashboard():
     # PlotlyJSONEncoder appropriately converts pandas, datetime, etc
     # objects to their JSON equivalents
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
-    return render_template('/dashboard.html', ids=ids, graphJSON=graphJSON)
+    return render_template(
+        '/dashboard.html', sampleCount=sampleCount, ids=ids, graphJSON=graphJSON
+    )
+
+
+def getSampleCount():
+    sampleCount_statement = "SELECT count(*) FROM samplestatus.sample;"
+    app.logger.info('total number of samples ' + sampleCount_statement)
+    data = engine.execute(sampleCount_statement)
+    return data.fetchone()[0]
 
 
 def getIGOSamplesYear():
@@ -161,9 +171,9 @@ def getIGOSamplesYear():
 
 
 def getPiSamples():
-    piSamples_statement = "with top10 as (select  count(*)  as samples, investigatorEmail from samplestatus.sample GROUP BY investigatorEmail order by samples desc limit 10) select * from top10 union all select count(*), 'other' as investigatorEmail from samplestatus.sample where investigatorEmail not in (select investigatorEmail from top10);"
+    piSamples_statement = "with top10 as (select  count(*)  as samples, investigator from samplestatus.sample GROUP BY investigator order by samples desc limit 10) select * from top10 union all select count(*), 'other' as investigator from samplestatus.sample where investigator not in (select investigator from top10);"
     # piSamplesOther_statement = "SELECT count(*) as samples,investigatorEmail  FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc offset 10;"
-    app.logger.info("getting piSamples: " +piSamples_statement)
+    app.logger.info("getting piSamples: " + piSamples_statement)
     piSamples = engine.execute(piSamples_statement)
     data = {'values': [], 'labels': []}
     for sample in piSamples:
@@ -174,7 +184,7 @@ def getPiSamples():
 
 def getTumorTypes():
     tumorTypes_statement = "SELECT tumorOrNormal, count(*) FROM samplestatus.sample GROUP BY tumorOrNormal;"
-    app.logger.info("getting tumorTypes: " +tumorTypes_statement)
+    app.logger.info("getting tumorTypes: " + tumorTypes_statement)
     tumorTypes = engine.execute(tumorTypes_statement)
     data = {'x': [], 'y': []}
     for sample in tumorTypes:
@@ -187,7 +197,7 @@ def getTumorTypes():
 
 def getRoslinSamplesByYear():
     getRoslinSamplesByYear_statement = "SELECT count(*),  YEAR(date) FROM samplestatus.status WHERE state = 'Roslin Done' GROUP BY YEAR(date);"
-    app.logger.info("getting roslinSamplesByYear: " +getRoslinSamplesByYear_statement)
+    app.logger.info("getting roslinSamplesByYear: " + getRoslinSamplesByYear_statement)
     getRoslinSamplesByYear = engine.execute(getRoslinSamplesByYear_statement)
     data = {'x': [], 'y': []}
     for sample in getRoslinSamplesByYear:
@@ -198,7 +208,7 @@ def getRoslinSamplesByYear():
 
 def getRoslinSamplesPast3():
     roslinSamplesPast3_statement = "SELECT  month(date), count(*) FROM samplestatus.status WHERE state = 'Roslin Done' and  date >= DATE_ADD(NOW(), INTERVAL -3 MONTH)  GROUP BY month(date) ORDER BY MONTH(date);"
-    app.logger.info("getting roslinSamplesPast3: " +roslinSamplesPast3_statement)
+    app.logger.info("getting roslinSamplesPast3: " + roslinSamplesPast3_statement)
     roslinSamplesPast3 = engine.execute(roslinSamplesPast3_statement)
     data = {'x': [], 'y': []}
     for sample in roslinSamplesPast3:
@@ -209,12 +219,10 @@ def getRoslinSamplesPast3():
 
 def getIGOSamplesPast3():
     igoSamplesPast3_statement = "SELECT MONTH(date), count(*) FROM samplestatus.status WHERE state = 'IGO_RECEIVED' and  date >= DATE_ADD(NOW(), INTERVAL -3 MONTH) GROUP BY MONTH(date) ORDER BY MONTH(date);"
-    app.logger.info("getting igoSamplesPast3: " +igoSamplesPast3_statement)
+    app.logger.info("getting igoSamplesPast3: " + igoSamplesPast3_statement)
     igoSamplesPast3 = engine.execute(igoSamplesPast3_statement)
     data = {'x': [], 'y': []}
     for sample in igoSamplesPast3:
         data['x'].append(calendar.month_abbr[sample[0]])
         data['y'].append(sample[1])
     return data
-
-

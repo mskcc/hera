@@ -74,7 +74,6 @@ def generateColumnHeaders(dbColumns):
     for row in dbColumns:
         columns_dict = {"data": row[0], "title": row[0]}
         columns.append(columns_dict.copy())
-
     return columns
 
 
@@ -104,14 +103,12 @@ def generateSampleData(dbData, columnHeaders):
     data = []
     for row in dbData:
         for i, col in enumerate(columnHeaders):
-
             data_dict[col["data"]] = "" if row[i] is None else str(row[i])
             # make id's clickable
             if col["data"] == 'id':
                 data_dict[col["data"]] = (
                     '<a href="/status/' + str(row[i]) + '">' + str(row[i]) + '</a>'
                 )
-
         data.append(data_dict.copy())
     return data
 
