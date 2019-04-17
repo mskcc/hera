@@ -190,7 +190,7 @@ def getIGOSamplesYear():
 
 
 def getPiSamples():
-    piSamples_statement = "with top10 as (select  count(*)  as samples, investigator from samplestatus.sample GROUP BY investigator order by samples limit 10) select * from top10 union all select count(*), 'other' as investigator from samplestatus.sample where investigator not in (select investigator from top10);"
+    piSamples_statement = "with top10 as (select  count(*)  as samples, investigator from samplestatus.sample GROUP BY investigator order by samples DESC limit 10) select * from top10 union all select count(*), 'other' as investigator from samplestatus.sample where investigator not in (select investigator from top10);"
     # piSamplesOther_statement = "SELECT count(*) as samples,investigatorEmail  FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc offset 10;"
     app.logger.info("getting piSamples: " + piSamples_statement)
     piSamples = engine.execute(piSamples_statement)
