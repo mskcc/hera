@@ -44,6 +44,41 @@ def dashboard():
         dict(
             data=[
                 dict(
+                    x=piSamples['labels'],
+                    y=piSamples['values'],
+                    type='bar',
+                    marker=dict(color='#F6C65B'),
+                )
+            ],
+            layout=dict(
+                title='WES Samples by PI',
+                barmode='stack',
+                autosize=False,
+                width=500,
+                height=500,
+            ),
+        ), 
+        
+        dict(
+            data=[
+                dict(
+                    x=tumorTypes['labels'],
+                    y=tumorTypes['values'],
+                    type='bar',
+                    marker=dict(color='#009490'),
+                )
+            ],
+            layout=dict(
+                title='Tumor Types',
+                barmode='stack',
+                autosize=False,
+                width=500,
+                height=500,
+            ),
+        ),
+        dict(
+            data=[
+                dict(
                     x=igoSamplesYear['x'],
                     y=igoSamplesYear['y'],
                     type='bar',
@@ -85,7 +120,7 @@ def dashboard():
                 )
             ],
             layout=dict(
-                title='IGO Samples Received last 3 months',
+                title='IGO Samples Received 2019',
                 autosize=False,
                 width=500,
                 height=500,
@@ -101,47 +136,13 @@ def dashboard():
                 )
             ],
             layout=dict(
-                title='Roslin Samples Received last 3 months',
+                title='Roslin Samples Received 2019',
                 autosize=False,
                 width=500,
                 height=500,
             ),
         ),
-        dict(
-            data=[
-                dict(
-                    x=piSamples['labels'],
-                    y=piSamples['values'],
-                    type='bar',
-                    marker=dict(color='#F6C65B'),
-                )
-            ],
-            layout=dict(
-                title='Top Ten PIs by Number of WES Samples',
-                barmode='stack',
-                autosize=False,
-                width=500,
-                height=500,
-            ),
-        ), 
-        
-        dict(
-            data=[
-                dict(
-                    x=tumorTypes['labels'],
-                    y=tumorTypes['values'],
-                    type='bar',
-                    marker=dict(color='#009490'),
-                )
-            ],
-            layout=dict(
-                title='Most Common Tumor Types',
-                barmode='stack',
-                autosize=False,
-                width=500,
-                height=500,
-            ),
-        ),
+
 
         # dict(
         #     data=[
@@ -190,7 +191,7 @@ def getIGOSamplesYear():
 
 
 def getPiSamples():
-    piSamples_statement = "with top10 as (select  count(*)  as samples, investigator from samplestatus.sample GROUP BY investigator order by samples DESC limit 10) select * from top10 union all select count(*), 'other' as investigator from samplestatus.sample where investigator not in (select investigator from top10);"
+    piSamples_statement = "with top10 as (select  count(*)  as samples, investigator from samplestatus.sample GROUP BY investigator order by samples DESC limit 100) select * from top10 union all select count(*), 'other' as investigator from samplestatus.sample where investigator not in (select investigator from top10) ORDER BY samples;"
     # piSamplesOther_statement = "SELECT count(*) as samples,investigatorEmail  FROM samplestatus.sample GROUP BY investigatorEmail order by samples desc offset 10;"
     app.logger.info("getting piSamples: " + piSamples_statement)
     piSamples = engine.execute(piSamples_statement)

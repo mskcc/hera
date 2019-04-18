@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Oracle</title>
+    <title>Delphi</title>
     {% block additional_js_top %}{% endblock %}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     
@@ -27,7 +27,7 @@
 
 <body>
     <div class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top" role="navigation">
-        <a class="navbar-brand" href="{{ url_for('dashboard.dashboard') }}">Oracle</a>
+        <a class="navbar-brand" href="{{ url_for('dashboard.dashboard') }}">Delphi</a>
         <div class="e" id="navbarText">
             <ul class="navbar-nav mr-auto">
                 {% if not current_user.is_authenticated %}

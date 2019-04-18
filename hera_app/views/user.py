@@ -83,7 +83,7 @@ def login():
             )
             login_user(user)
             app.logger.info("user " + username + " logged in successfully")
-            flash('You were logged in. Welcome to the Oracle.')
+            flash('You were logged in. Welcome to Delphi.')
             return redirect(url_for('dashboard.dashboard'))
     if form.errors:
         flash(

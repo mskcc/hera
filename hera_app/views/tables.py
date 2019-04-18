@@ -27,7 +27,8 @@ def samples():
         'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA="samplestatus"  AND TABLE_NAME="sample";'
     )
     sample_id_db_data = engine.execute("SELECT * FROM sample").fetchall()
-    columnHeaders = generateColumnHeaders(sample_id_db_columns)
+    # columnHeaders = generateColumnHeaders(sample_id_db_columns)
+    columnHeaders = [{'data': 'id', 'title': 'id'}, {'data': 'altId', 'title': 'altId'}, {'data': 'correctedCmoId', 'title': 'correctedCmoId'}, {'data': 'gender', 'title': 'gender'},  {'data': 'investigator', 'title': 'investigator'}, {'data': 'investigatorEmail', 'title': 'investigatorEmail'}, {'data': 'tissueLocation', 'title': 'tissueLocation'}, {'data': 'tumorOrNormal', 'title': 'tumorOrNormal'}, {'data': 'tumorType', 'title': 'tumorType'}]
     data = generateSampleData(sample_id_db_data, columnHeaders)
     return render_template("samples.html", columnHeaders=columnHeaders, data=data)
 
@@ -84,6 +85,10 @@ def generateStatusData(dbData, columnHeaders):
     for row in dbData:
         for i, col in enumerate(columnHeaders):
             data_dict[col["data"]] = "" if row[i] is None else str(row[i])
+            if col["data"] == 'fk_sample_id':
+                data_dict[col["data"]] = (
+                    '<a href="/status/' + str(row[i]) + '">' + str(row[i]) + '</a>'
+                )
         data.append(data_dict.copy())
     return data
 
@@ -99,6 +104,7 @@ def generateVisData(dbData):
 
 
 def generateSampleData(dbData, columnHeaders):
+
     data_dict = {}
     data = []
     for row in dbData:
@@ -106,6 +112,8 @@ def generateSampleData(dbData, columnHeaders):
             data_dict[col["data"]] = "" if row[i] is None else str(row[i])
             # make id's clickable
             if col["data"] == 'id':
+                print(col["data"])
+                print(columnHeaders)
                 data_dict[col["data"]] = (
                     '<a href="/status/' + str(row[i]) + '">' + str(row[i]) + '</a>'
                 )
