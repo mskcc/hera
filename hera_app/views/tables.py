@@ -33,6 +33,24 @@ def samples():
     return render_template("samples.html", columnHeaders=columnHeaders, data=data)
 
 
+
+
+@tables.route("/tumors")
+@login_required
+def tumors():
+    app.logger.info("generating tumor table data ")
+
+    #  move to sth more persistent once columns are more finalized
+    # sample_id_db_columns = engine.execute(
+    #     'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA="samplestatus"  AND TABLE_NAME="sample";'
+    # )
+    tumor_db_data = engine.execute("SELECT tumorType, count(*) as samples FROM samplestatus.sample where (tumorType <> 'Normal' and tumorType is not null and tumorType <> '') group by tumorType order by samples desc; ").fetchall()
+    # columnHeaders = generateColumnHeaders(sample_id_db_columns)
+    columnHeaders = [{'data': 'tumorType', 'title': 'tumorType'}, {'data': 'count', 'title': 'count'}]
+    data = generateTumorData(tumor_db_data, columnHeaders)
+    return render_template("tumors.html", columnHeaders=columnHeaders, data=data)
+
+
 @tables.route("/status")
 @tables.route("/status/<sample_id>")
 @login_required
@@ -117,6 +135,17 @@ def generateSampleData(dbData, columnHeaders):
                 data_dict[col["data"]] = (
                     '<a href="/status/' + str(row[i]) + '">' + str(row[i]) + '</a>'
                 )
+        data.append(data_dict.copy())
+    return data
+
+def generateTumorData(dbData, columnHeaders):
+
+    data_dict = {}
+    data = []
+    for row in dbData:
+        for i, col in enumerate(columnHeaders):
+            data_dict[col["data"]] = "" if row[i] is None else str(row[i])
+            # data_dict[col["data"]] = "" if row[i] is "None" else str(row[i])
         data.append(data_dict.copy())
     return data
 
