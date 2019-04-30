@@ -40,4 +40,6 @@ table {
 .main-container {
     width: 90vw;
     margin: 0 auto;
+    margin-top: 5em;
+
 }
